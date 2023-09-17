@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!--<header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="#">Complete Developer Network</a>
+            </div>
+        </nav>
+    </header>-->
+    <header>
+        <h1>Complete Developer Network</h1>
+    </header>
+    <ul>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a class="active" href="userSingle.html">Simple CDN View</a></li>
+        <li><a  href="userSinglelist.html">Simple CDN List</a></li>
+    </ul>
+    <div class="container">
+        <h2>User Detail</h2>
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <label for="mail" class="form-control" id="mail" />
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number:</label>
+                <label for="tel" class="form-control" id="phoneno" />
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="skills">Skills:</label>
+                    </div>
+                </div>
+                <div id="skillsContainer">
+                    <div class="input-group mb-2">
+                        <label class="form-control" id="skills" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="hobby">Hobby:</label>
+                <label id="hobbies" class="form-control"/>
+            </div>
+
+        </form>
+    </div>
+
+
+
+
+    <!-- Bootstrap JS and jQuery CDN (required for Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+
+var currDomain = window.location.origin;
+const token = sessionStorage.getItem('token');
+const url = new URL(window.location);
+const searchParams = url.searchParams;
+const userId = searchParams.get('id');
+
+if (!token) {
+            // If the token is not present, redirect to the login page
+            //window.location.href = 'login.html';
+}
+
+const headers = new Headers({
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+});
+
+fetchRegistrationData();
+
+function fetchRegistrationData() {
+            fetch(`${currDomain}/api/SimpleUser/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json()
+                    } else if (response.status === 404) {
+                        alert(`No Record found : ${userId}`);
+                        window.location.href = 'usersinglelist.html';
+                        return promise.reject('error 404')
+                    } else {
+                        return promise.reject('some other error: ' + response.status)
+                    }
+                })
+                .then(data => {
+                    console.log(data);
+                    document.getElementById('username').value = data.username;
+                    document.getElementById('mail').innerHTML = data.mail;
+                    document.getElementById('phoneno').innerHTML = data.phoneno;
+                    document.getElementById('skills').innerHTML = data.skills;
+                    document.getElementById('hobbies').innerHTML = data.hobbies;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+};
+
+    </script>
+</body>
+</html>

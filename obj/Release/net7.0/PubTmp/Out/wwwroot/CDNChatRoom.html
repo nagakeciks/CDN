@@ -1,0 +1,111 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="CDNChat.css">
+</head>
+<body>
+    <header>
+        <h1>Complete Developer Network</h1>
+    </header>
+    <div class="chat-header">
+        <a href="dashboard.html" class="active">CDN Dashboard</a>
+    </div>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>Chat Room</h1>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <ul id="chat-list"></ul>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+    <script>
+        var currDomain = window.location.origin;
+        const token = sessionStorage.getItem('token');
+        const userId = sessionStorage.getItem('userId');
+
+        const $chatList = $('#chat-list');
+        const $messageInput = $('#message-input');
+        const $sendButton = $('#send-button');
+
+        function addMessage(message, sender) {
+            console.log(message + sender);
+            const $messageItem = $('<li>');
+            $messageItem.text(`${sender}: ${message}`);
+            $chatList.append($messageItem);
+            //console.log($chatList[0].scrollHeight);
+           // $chatList.scrollTop($chatList[0].scrollHeight);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            var scrollingDiv = document.getElementById("chat-messages");
+            scrollingDiv.scrollTop = scrollingDiv.scrollHeight;
+            //console.log(scrollingDiv.scrollTop);
+        }
+
+        $sendButton.click(function () {
+            const message = $messageInput.val();
+            if (message.trim() !== '') {
+                //addMessage(message, 'User');
+                SendMessageToRoom(message);
+                $messageInput.val('');
+            }
+        });
+
+        $messageInput.keypress(function (e) {
+            if (e.which === 13) {
+                $sendButton.click();
+            }
+        });
+
+
+        var ConnID = "";
+        // http://hafizsalam.sytes.net/signalr/chat-hub
+        // https://hafiz-cdn.azurewebsites.net/chat-hub
+        // http://localhost:5083/chat-hub
+        const connection = new signalR.HubConnectionBuilder()
+
+            .withUrl(`${currDomain}/chat-hub`)
+
+            .build();
+
+        connection.start().then(function () {
+            //console.log("Connected to the hub.");
+            const $messageItem = $('<li>');
+            $messageItem.text(`Welcome to CDN Chat room`);
+            $chatList.append($messageItem);
+            
+        }).catch(function (err) {
+            console.error(err.toString());
+        });
+
+        connection.on("ReturnID", function (message) {
+            ConnID = message;
+            console.log("Return ID: " + ConnID);
+            RegisterUser();
+
+        });
+        connection.on("ReceiveMessageRoom", function (username, message) {
+            addMessage(message, username);
+        });
+
+        function SendMessageToRoom(message) {
+            connection.invoke("SendMessageToRoom", parseInt(userId), message).catch(function (err) {
+                console.error(err.toString());
+            });
+
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\inetpub\wwwroot\SignalR</_PublishTargetUrl>
+    <History>True|2023-09-17T13:55:10.0774904Z;True|2023-09-17T13:28:13.7393451+08:00;True|2023-09-17T11:16:12.7708769+08:00;True|2023-09-17T10:56:28.0510467+08:00;True|2023-09-16T12:41:43.1386489+08:00;True|2023-09-16T12:39:36.3171723+08:00;True|2023-09-16T12:32:19.2735986+08:00;False|2023-09-16T12:32:02.8482687+08:00;True|2023-09-14T20:14:50.7037370+08:00;False|2023-09-14T20:00:41.6660671+08:00;True|2023-09-14T19:55:36.6126971+08:00;True|2023-09-14T19:53:30.7923633+08:00;True|2023-09-14T19:49:46.6921661+08:00;False|2023-09-14T19:49:30.9439020+08:00;True|2023-09-13T10:58:47.2436622+08:00;False|2023-09-13T10:57:12.8899327+08:00;True|2023-09-13T00:10:00.8104635+08:00;True|2023-09-12T20:10:28.2373155+08:00;False|2023-09-12T20:09:08.8651154+08:00;False|2023-09-12T20:08:46.3133632+08:00;True|2023-09-12T17:38:35.5629738+08:00;False|2023-09-12T17:37:26.8432143+08:00;False|2023-09-12T17:37:16.4995703+08:00;False|2023-09-12T17:36:43.1773127+08:00;True|2023-09-12T17:28:55.5918762+08:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="StaticFile/ListUser.html">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="StaticFile/TestSignalR.html">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="StaticFile/user.html">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="StaticFile/UserEdit.html">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="StaticFile/userSingle.html">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="wwwroot/dashboard.html">
+      <publishTime>09/17/2023 01:00:41</publishTime>
+    </File>
+    <File Include="wwwroot/dashboard.js">
+      <publishTime>09/17/2023 11:50:39</publishTime>
+    </File>
+    <File Include="wwwroot/ListUser.html">
+      <publishTime>09/14/2023 22:13:17</publishTime>
+    </File>
+    <File Include="wwwroot/Login.html">
+      <publishTime>09/17/2023 11:08:21</publishTime>
+    </File>
+    <File Include="wwwroot/style.css">
+      <publishTime>09/17/2023 00:55:23</publishTime>
+    </File>
+    <File Include="wwwroot/TestSignalR.html">
+      <publishTime>09/17/2023 11:44:50</publishTime>
+    </File>
+    <File Include="wwwroot/user.html">
+      <publishTime>09/17/2023 11:16:07</publishTime>
+    </File>
+    <File Include="wwwroot/UserEdit.html">
+      <publishTime>09/17/2023 13:06:32</publishTime>
+    </File>
+    <File Include="wwwroot/userSingle.html">
+      <publishTime>09/17/2023 00:52:09</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

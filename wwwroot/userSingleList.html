@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List - Complete Developer Network</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!--<style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin: 0;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+            li:hover {
+                background-color: #f5f5f5;
+            }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+            a:hover {
+                text-decoration: underline;
+            }
+    </style>-->
+
+</head>
+<body>
+    <header>
+        <h1>Complete Developer Network</h1>
+    </header>
+    <ul>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="userSingle.html">Simple CDN Registration</a></li>
+        <li><a class="active" href="userSinglelist.html">Simple CDN List</a></li>
+    </ul>
+    <h1>CDN User List</h1>
+
+    <div id="userList">
+
+    </div>
+    <!--<ul id="userList">-->
+    <!-- User list items will be dynamically added here -->
+    <!--</ul>-->
+
+    <script>
+        var currDomain = window.location.origin;
+        const token = sessionStorage.getItem('token');
+        fetchUserList();
+        // Function to fetch user data from the API
+        function fetchUserList() {
+
+            return fetch(`${currDomain}/api/SimpleUser`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response from the API
+                    console.log(data);
+                    if (data.length > 0) {
+                        generateUserList(data)
+                        // Show the modal popup if the submission is successful
+                        
+                    } else {
+                        // Handle errors if needed
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+
+        // Function to generate the user list
+        function generateUserList(userData) {
+            const userList = document.getElementById('userList');
+            userList.innerHTML = '';
+            userData.forEach(user => {
+                const listItem = document.createElement('div');
+                listItem.innerHTML = `<div class="card-body">
+                                <p class="card-text"><strong>ID:</strong> ${user.id},
+                                <strong>Username:</strong> ${user.username},
+                                <strong>Email:</strong> ${user.mail},
+                                <a href="usersingleedit.html?id=${user.id}">Edit</a>
+                                <a href="usersingleview.html?id=${user.id}">View</a>
+                                <a href="#" onClick='DeleteUser(${user.id})'">Delete</a></p>
+                                </div>`;
+                userList.appendChild(listItem);
+            });
+        }
+
+        // Fetch user data and generate the user list when the page loads
+        //fetchUserList()
+        //    .then(userData => {
+        //        generateUserList(userData);
+        //    });
+
+        function DeleteUser(id) {
+            fetch(`${currDomain}/api/SimpleUser/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response from the API
+                    if (data > 0) {
+
+                        // Show the modal popup if the submission is successful
+                        alert(`User ${id} deleted`);
+                        fetchUserList();
+                    } else {
+                        // Handle errors if needed
+                    }
+                })
+                .catch(error => {
+                    // Handle any errors that occur during the API call
+                    console.error(error);
+                    // You can show an error message to the user
+                });
+        }
+    </script>
+</body>
+</html>

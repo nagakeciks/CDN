@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notification Receiver</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+</head>
+<body>
+    <div id="notificationContainer"></div>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:5083/notificationHub")
+            .build();
+
+        connection.start().then(function () {
+            console.log("Connected to the hub.");
+        }).catch(function (err) {
+            console.error(err.toString());
+        });
+
+        connection.on("ReceiveNotification", function (message) {
+            // Handle received notification message here
+            const notificationContainer = document.getElementById("notificationContainer");
+            const notificationDiv = document.createElement("div");
+            notificationDiv.innerText = message;
+            notificationContainer.appendChild(notificationDiv);
+        });
+
+        // Specify the user ID you want to receive notifications for
+        const specificUserId = "1234";
+
+        connection.invoke("AddToGroup", specificUserId).catch(function (err) {
+            console.error(err.toString());
+        });
+    </script>
+</body>
+</html>

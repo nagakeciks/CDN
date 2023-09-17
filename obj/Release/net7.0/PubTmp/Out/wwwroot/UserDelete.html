@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete User - Complete Developer Network</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-top: 0;
+            color: #333;
+        }
+
+        p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            display: inline-block;
+            background-color: #d9534f;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #c9302c;
+            }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            border-radius: 5px;
+            text-align: center;
+            padding: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        .close-redirect {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+            a:hover {
+                text-decoration: underline;
+            }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Complete Developer Network</h1>
+    </header>
+    <ul>
+        <li><a class="active" href="dashboard.html">Dashboard</a></li>
+        <li><a href="UserEdit.html">Edit Profile</a></li>
+        <li><a href="UserDelete.html">Delete Profile</a></li>
+        <li><a href="userSingle.html">Simple CDN Management</a></li>
+
+        <li style="float:right"><a class="logout-button" href="#">Logout</a></li>
+    </ul>
+    <div class="container">
+        <h1>Delete User</h1>
+        <p>Please enter your username and password to delete your account. This action cannot be undone.</p>
+
+        <form id="deleteUserForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit">Delete Account</button>
+        </form>
+    </div>
+
+    <!-- Modal -->
+    <div id="deleteSuccessModal" class="modal">
+        <div class="modal-content">
+            <span class="close-redirect" data-modal="deleteSuccessModal">&times;</span>
+            <p>User deleted, thanks for using CDN</p>
+        </div>
+    </div>
+
+    <!-- Delete Error Modal -->
+    <div id="deleteErrorModal" class="modal">
+        <div class="modal-content">
+            <span class="close" data-modal="deleteErrorModal">&times;</span>
+            <p id="errorMessage">An error occurred while deleting the user.</p>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript code for showing/hiding the modal and redirection
+
+        const token = sessionStorage.getItem('token');
+
+        // If token is not found, redirect to the login page
+        if (!token) {
+            window.location.href = 'login.html'; // Replace 'login.html' with your login page URL
+        }
+
+        function showSuccessModal() {
+            const modal = document.getElementById('deleteSuccessModal');
+            modal.style.display = 'block';
+        }
+
+        function showErrorModal(errorMessage) {
+            const modal = document.getElementById('deleteErrorModal');
+            const errorMessageElement = document.getElementById('errorMessage');
+            errorMessageElement.textContent = errorMessage;
+            modal.style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'none';
+            //window.location = "login.html";
+        }
+
+        // Event listener to close modals when clicking the "x" button
+        document.querySelectorAll('.close').forEach(closeButton => {
+            closeButton.addEventListener('click', function () {
+                const modalId = this.getAttribute('data-modal');
+                closeModal(modalId);
+            });
+        });
+
+        document.querySelectorAll('.close-redirect').forEach(closeButton => {
+            closeButton.addEventListener('click', function () {
+                const modalId = this.getAttribute('data-modal');
+                const modal = document.getElementById(modalId);
+                modal.style.display = 'none';
+                sessionStorage.clear();
+                window.location = "login.html";
+            });
+        });
+        // Event listener to submit the delete form
+        const deleteUserForm = document.getElementById('deleteUserForm');
+        if (deleteUserForm) {
+            deleteUserForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var currDomain = window.location.origin;
+                //const token = sessionStorage.getItem('token');
+                const userId = sessionStorage.getItem('userId');
+
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                // Replace with your actual API endpoint for user deletion
+                const apiUrl = `${currDomain}/api/user/DeleteUser`;
+
+
+
+                fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId, username, password }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.success === true) {
+                            showSuccessModal(); // Show the success modal
+                        } else {
+                            showErrorModal(data.errorMsg); // Show the error modal with custom error message
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        showErrorModal(`An error occurred while deleting the user. ${error}`);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

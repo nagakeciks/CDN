@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <!--<header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="#">Complete Developer Network</a>
+            </div>
+        </nav>
+    </header>-->
+    <header>
+        <h1>Complete Developer Network</h1>
+    </header>
+    <ul>
+        <li><a class="active" href="dashboard.html">Dashboard</a></li>
+        <li><a href="UserEdit.html">Edit Profile</a></li>
+        <li><a href="UserDelete.html">Delete Profile</a></li>
+        <li><a href="CDNChatRoom.html">Chat Room</a></li>
+        <li><a href="userSingle.html">Simple CDN Management</a></li>
+
+        <li style="float:right"><a class="logout-button" href="#">Logout</a></li>
+    </ul>
+    <div class="container mt-5">
+        <!--<div class="logout-container">
+            <a class="logout-button" href="#">Logout</a>
+        </div>-->
+
+        <div id="menu">
+        </div>
+        <!--<h1>Dashboard</h1>-->
+        <div id="profile" class="card mb-3">
+            <!-- User list will be dynamically populated here -->
+        </div>
+        <div id="userListContainer">
+            <!-- User list will be dynamically populated here -->
+        </div>
+    </div>
+
+    <!-- jQuery and jQuery UI CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+    <!-- Your JavaScript file for the dashboard -->
+    <script src="dashboard.js"></script>
+</body>
+</html>

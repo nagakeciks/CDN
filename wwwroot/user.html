@@ -1,0 +1,272 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <h1><span class="d-none d-md-inline">Complete Developer Network</span></h1>
+                    <h1><span class="d-inline d-md-none">CDN</span></h1>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!--<button type="button" class="btn btn-primary" id="listUser">
+            View User List
+        </button>-->
+        <h2>User Registration</h2>
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" required maxlength="20">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" required maxlength="12">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="tel" class="form-control" id="phoneNumber" required>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="skills">Skills:</label>
+                    </div>
+
+                </div>
+                <div id="skillsContainer">
+                    <!--<div class="input-group mb-2">
+                <input type="text" class="form-control" name="skills[]" required>
+                <div class="input-group-append">
+                    <span class="input-group-text">Rating</span>
+                    <input type="number" class="form-control" name="ratings[]" min="1" max="5" placeholder="1-5" value="1">
+                    <div class="rating-slider"></div>
+                    <button type="button" class="btn btn-danger remove-skill">Remove</button>
+                </div>
+
+            </div>-->
+                </div>
+                <div class="col-md-6 text-left">
+                    <button type="button" class="btn btn-primary" id="addSkill">Add Skill</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="Hobbies">Hobbies:</label>
+                    </div>
+
+                </div>
+                <div id="hobbiesContainer">
+                    <!--<div class="input-group mb-2">
+                <input type="text" class="form-control" name="hobbies[]" required>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-danger remove-hobby">Remove</button>
+                </div>
+            </div>-->
+                </div>
+                <div class="col-md-6 text-left">
+                    <button type="button" class="btn btn-primary" id="addHobby">Add Hobby</button>
+                </div>
+            </div>
+            <div class="col-md-12 text-right">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal Popup -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">User Registered</h5>
+                    <button type="button" class="close" data-dismiss="modal" onclick="window.location.href = `login.html`;">&times;</button>
+                </div>
+                <div class="modal-body">
+                    Welcome to CDN!. You will be redirected to Login Page
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href = `login.html`;">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="errorText"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery CDN (required for Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        var currDomain = window.location.origin;
+        function showErrorModal(message) {
+            document.getElementById('errorText').textContent = message;
+            $('#errorModal').modal('show');
+        }
+
+        document.getElementById('addSkill').addEventListener('click', function () {
+            const skillsContainer = document.getElementById('skillsContainer');
+            const newSkillInput = document.createElement('div');
+            newSkillInput.className = 'input-group mb-2';
+            newSkillInput.innerHTML = `
+                        <input type="text" class="form-control" name="skills[]" required>
+                        <div class="input-group-append">
+                            <span class="input-group-text">Rating</span>
+                            <input type="number" class="form-control" name="ratings[]" min="1" max="5" placeholder="1-5" value="1">
+                            <button type="button" class="btn btn-danger remove-skill">Remove</button>
+                        </div>
+                    `;
+            skillsContainer.appendChild(newSkillInput);
+
+            // Add an event listener to the new "Remove" button
+            //const removeSkillButtons = document.querySelectorAll('.remove-skill');
+            //removeSkillButtons.forEach(button => {
+            //    button.addEventListener('click', function () {
+            //        skillsContainer.removeChild(newSkillInput);
+            //    });
+            //});
+
+            const removeSkillButton = newSkillInput.querySelector('.remove-skill');
+            removeSkillButton.addEventListener('click', function () {
+                skillsContainer.removeChild(newSkillInput);
+            });
+        });
+
+        const removeSkillButtons = document.querySelectorAll('.remove-skill');
+        removeSkillButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                skillsContainer.innerHTML = "";
+            });
+        });
+
+        document.getElementById('addHobby').addEventListener('click', function () {
+            const hobbiesContainer = document.getElementById('hobbiesContainer');
+            const newHobbyInput = document.createElement('div');
+            newHobbyInput.className = 'input-group mb-2';
+            newHobbyInput.innerHTML = `
+                        <input type="text" class="form-control" name="hobbies[]" required>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-danger remove-hobby">Remove Hobby</button>
+                        </div>
+                    `;
+            hobbiesContainer.appendChild(newHobbyInput);
+
+            // Add an event listener to the new "Remove" button
+            const removeHobbyButtons = document.querySelectorAll('.remove-hobby');
+            removeHobbyButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    hobbiesContainer.removeChild(newHobbyInput);
+                });
+            });
+
+
+        });
+
+        document.getElementById('registrationForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Collect user input data
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const mail = document.getElementById('email').value;
+            const phoneno = document.getElementById('phoneNumber').value;
+            //const skillsets = document.getElementById('skillsets').value;
+            //const hobby = document.getElementById('hobby').value;
+
+            const skillInputs = document.getElementsByName('skills[]');
+            const skills = Array.from(skillInputs).map(input => input.value);
+            console.log(skills);
+            const ratingInputs = document.getElementsByName('ratings[]');
+            const ratings = Array.from(ratingInputs).map(input => input.value);
+
+            const hobbyInputs = document.getElementsByName('hobbies[]');
+            const hobbiesList = Array.from(hobbyInputs).map(input => input.value);
+            // Create a JSON object to send to the OpenAPI
+            const userData = {
+                username,
+                password,
+                mail,
+                phoneno,
+                SkillsList: skills.map((skillName, index) => ({ skillName, skillRatings: ratings[index] })),
+                hobbiesList: hobbiesList.map((hobbyName) => ({ hobbyName })),
+            };
+            console.log(userData);
+            // Assuming you have an OpenAPI endpoint for user registration
+            const apiUrl = `${currDomain}/api/User/CreateUser`;
+
+            // Make a POST request to the OpenAPI
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response from the API
+                    if (data.success) {
+                        // Show the modal popup if the submission is successful
+                        $('#confirmationModal').modal('show');
+                        $('#registrationForm')[0].reset();
+                        
+                    } else {
+                        // Handle errors if needed
+                        showErrorModal(data.errMsg || 'An error occurred during registration.');
+
+                    }
+                    
+                })
+                .catch(error => {
+                    // Handle any errors that occur during the API call
+                    console.error(error);
+                    // You can show an error message to the user
+                });
+        });
+        //document.getElementById('listUser').addEventListener('click', function (e) {
+        //    e.preventDefault();
+
+        //    window.location.href = `listuser.html`;
+
+        //});
+    </script>
+</body>
+</html>

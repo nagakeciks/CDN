@@ -1,0 +1,53 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\CDNChat.css",
+      "PackagePath": "staticwebassets\\CDNChat.css"
+    },
+    {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\CDNChatRoom.html",
+      "PackagePath": "staticwebassets\\CDNChatRoom.html"
+    },
+    {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\Login.html",
+      "PackagePath": "staticwebassets\\Login.html"
+    },
+    {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\UserDelete.html",
+      "PackagePath": "staticwebassets\\UserDelete.html"
+    },
+    {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\dashboard.html",
+      "PackagePath": "staticwebassets\\dashboard.html"
+    },
+    {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\dashboard.js",
+      "PackagePath": "staticwebassets\\dashboard.js"
+    },
+    {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\style.css",
+      "PackagePath": "staticwebassets\\style.css"
+    },
+    {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\userSingleList.html",
+      "PackagePath": "staticwebassets\\userSingleList.html"
+    },
+    {
+      "Id": "obj\\Release\\net7.0\\staticwebassets\\msbuild.HafizDemoAPI.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Release\\net7.0\\staticwebassets\\msbuild.build.HafizDemoAPI.props",
+      "PackagePath": "build\\HafizDemoAPI.props"
+    },
+    {
+      "Id": "obj\\Release\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.HafizDemoAPI.props",
+      "PackagePath": "buildMultiTargeting\\HafizDemoAPI.props"
+    },
+    {
+      "Id": "obj\\Release\\net7.0\\staticwebassets\\msbuild.buildTransitive.HafizDemoAPI.props",
+      "PackagePath": "buildTransitive\\HafizDemoAPI.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

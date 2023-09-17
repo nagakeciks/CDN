@@ -1,0 +1,75 @@
+﻿ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+    border-right: 1px solid #bbb;
+}
+
+    li:last-child {
+        border-right: none;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+        li a:hover:not(.active) {
+            background-color: #111;
+        }
+
+        li a:hover:visited {
+            background-color: #189cba;
+        }
+
+.active {
+    background-color: #04AA6D;
+}
+
+.visited {
+    background-color: #189cba;
+}
+/* Header styles */
+header {
+    background-color: #333; /* Background color */
+    color: #fff; /* Text color */
+    padding: 20px 0; /* Padding top and bottom */
+    text-align: center; /* Center-align text */
+}
+
+    header h1 {
+        font-size: 36px; /* Font size */
+        margin: 0; /* Remove default margin */
+        font-weight: bold; /* Bold text */
+    }
+
+/* Optional: Add a subtle box-shadow for depth */
+header {
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Style for the logout div */
+.logout-container {
+    position: inherit;
+    top: 10px;
+    right: 0px;
+}
+
+/* Style for the logout button/link */
+.logout-button {
+    background-color: #e5202058; /* Red background color - you can change this */
+    color: #fff; /* Text color */
+    padding: 5px 50px; /* Padding around the button */
+    border: none; /* Remove border */
+    border-radius: 10px; /* Rounded corners */
+    cursor: pointer; /* Add pointer cursor on hover */
+}

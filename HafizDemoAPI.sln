@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HafizDemoAPI", "HafizDemoAPI.csproj", "{EEE556F2-A443-48EE-B8A8-B30FDE8D14CC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{29AD368F-01A7-430F-B342-C4ED0CB06F7F}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEE556F2-A443-48EE-B8A8-B30FDE8D14CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEE556F2-A443-48EE-B8A8-B30FDE8D14CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEE556F2-A443-48EE-B8A8-B30FDE8D14CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEE556F2-A443-48EE-B8A8-B30FDE8D14CC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C079617-EF32-4D6D-80A3-969F875B4E21}
+	EndGlobalSection
+EndGlobal

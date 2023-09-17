@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Listing</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <h1><span class="d-none d-md-inline">Complete Developer Network</span></h1>
+                    <h1><span class="d-inline d-md-none">CDN</span></h1>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mt-4">
+        <h1>Registration Listing</h1>
+        <button type="button" class="btn btn-primary" id="addUser">
+            Register New User
+        </button>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                </tr>
+            </thead>
+            <tbody id="registrationTableBody">
+                <!-- Registration data rows will be dynamically populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- JavaScript code for populating the registration data -->
+    <script>
+
+
+
+        function fetchRegistrationData() {
+            // Replace 'your_api_endpoint' with the actual API endpoint
+            fetch('https://hafiz-cdn.azurewebsites.net/api/User/GetUser')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('registrationTableBody');
+                    tableBody.innerHTML = ''; // Clear existing table data
+
+                    data.forEach(registration => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                                <td>${registration.userName}</td>
+                                <td>${registration.mail}</td>
+                                <td>${registration.phoneNo}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary edit-button" data-id="${registration.userID}">Edit</button>
+                                </td>
+                            `;
+                        tableBody.appendChild(row);
+                    });
+
+                    // Add click event listeners to the edit buttons
+                    const editButtons = document.querySelectorAll('.edit-button');
+                    editButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const registrationId = this.getAttribute('data-id');
+                            // Redirect to the edit page with the registration ID
+                            window.location.href = `edit.html?id=${registrationId}`;
+                        });
+                    });
+                })
+                .catch(error => console.error('Error fetching registration data:', error));
+        }
+
+        document.getElementById('addUser').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            window.location.href = `user.html`;
+
+        });
+
+        // Populate the registration table when the page loads
+        window.onload = fetchRegistrationData();
+    </script>
+</body>
+</html>
