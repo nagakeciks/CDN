@@ -143,13 +143,7 @@ namespace HafizDemoAPI.Controllers
         [HttpGet]
         public List<User> GetUserList(Int32 UserID)
         {
-            //    { userId: 1, username: 'User1', email: 'user1@example.com', phoneNumber: '555-111-1111', status: 'Live', followedStatus: 'No' },
-            //{ userId: 2, username: 'User2', email: 'user2@example.com', phoneNumber: '555-222-2222', status: 'N/A', followedStatus: 'Yes' },
-            //{ userId: 3, username: 'User3', email: 'user3@example.com', phoneNumber: '555-333-3333', status: 'Live', followedStatus: 'Yes' },
             var listUser = new List<User>();
-            //listUser.Add(new User { UserID = 2, UserName = "nagakeciks", Mail = "nagakeciks@gmail.com", PhoneNo = "0122026609", Status = "Online", FollowedStatus = "Yes" });
-            //listUser.Add(new User { UserID = 21, UserName = "hafiz", Mail = "nagakeciks@gmail.com", PhoneNo = "0122026609", Status = "Online", FollowedStatus = "Yes" });
-            //listUser.Add(new User { UserID = 22, UserName = "din", Mail = "nagakeciks@gmail.com", PhoneNo = "0122026609", Status = "Offline", FollowedStatus = "No" });
             CDNContext cdnCtxt = new();
             var Users = cdnCtxt.Users.Where(user => user.UserId != UserID).ToList();
 
