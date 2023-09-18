@@ -26,7 +26,7 @@ jobs:
         run: dotnet build HafizDemoAPI.sln --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/HafizDemoAPI.prj
+        run: dotnet publish ${{env.DOTNET_ROOT}}/HafizDemoAPI.sln -c Release -o out
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
