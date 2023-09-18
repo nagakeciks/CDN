@@ -25,6 +25,21 @@ namespace HafizDemoAPI.Controllers
         }
 
         [HttpGet]
+        public IActionResult Logout(Int32 UserID, string ConnID)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity.Name != null)
+            {
+                var CurrentUserID = identity.FindFirst("Id").Value; //var CurrentUserID = identity.FindFirst("Id").Value; For security purpose, we can compare the Id stored in claims, during user edit or delete
+            }
+
+            var conn = cdnCtxt.CDNUserConn.Where(conn => conn.UserID == UserID && conn.ConnectionId == ConnID).ExecuteUpdate(setters => setters
+                            .SetProperty(b => b.Connected,false)
+                            );
+            return Ok(conn);
+        }
+
+        [HttpGet]
         public List<User> GetUserPaging(Int32 PageSize,Int32 PageNum)
         {
             var users = cdnCtxt.Users.AsNoTracking().Select(d => new User { UserID = d.UserId, UserName = d.Username, Mail = d.Mail, PhoneNo = d.PhoneNo }).Skip(PageNum * PageSize).Take(PageSize).ToList();

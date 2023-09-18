@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HafizDemoAPI;
 using HafizDemoAPI.ModelCDN;
-
+using Microsoft.Identity.Client;
 
 namespace HafizDemoAPI.Controllers
 {
@@ -73,6 +73,7 @@ namespace HafizDemoAPI.Controllers
             }
 
         }
+
 
         private string GenerateJwtToken(Int32 UserId,string UserName)
         {

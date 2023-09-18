@@ -24,8 +24,19 @@
     //getUserListPaging();
 
     $('.logout-button').on('click', function () {
-        sessionStorage.removeItem('token');
-        window.location.href = '/login.html'; 
+
+        const apiUrl = `${currDomain}/api/User/LogOut?UserID=${userId}&ConnID=${ConnID}`;
+
+        return fetch(apiUrl, {
+            method: 'GET',
+            headers: headers,
+        })
+            .then(response => response.json())
+            .then(data => {
+                    sessionStorage.removeItem('token');
+                    window.location.href = '/login.html'; 
+            })
+            .catch(error => console.error('Error fetching registration data:', error));
     });
 
 
