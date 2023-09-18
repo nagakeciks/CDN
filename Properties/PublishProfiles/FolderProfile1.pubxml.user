@@ -39,6 +39,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="wwwroot/UserEdit.html">
       <publishTime>09/17/2023 13:48:10</publishTime>
     </File>
+    <File Include="wwwroot/userRegister.html">
+      <publishTime>09/18/2023 09:25:57</publishTime>
+    </File>
     <File Include="wwwroot/userSingle.html">
       <publishTime>09/17/2023 19:56:33</publishTime>
     </File>

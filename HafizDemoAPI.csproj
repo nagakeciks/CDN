@@ -7,9 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\ListUser.html" />
-    <Content Remove="wwwroot\user.html" />
     <Content Remove="wwwroot\UserEdit.html" />
+    <Content Remove="wwwroot\userRegister.html" />
     <Content Remove="wwwroot\userSingle.html" />
     <Content Remove="wwwroot\userSingleEdit.html" />
     <Content Remove="wwwroot\userSingleView.html" />
@@ -30,8 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\ListUser.html" />
-    <None Include="wwwroot\user.html" />
+    <None Include="wwwroot\userRegister.html" />
     <None Include="wwwroot\UserEdit.html" />
     <None Include="wwwroot\userSingleView.html" />
     <None Include="wwwroot\userSingleEdit.html" />

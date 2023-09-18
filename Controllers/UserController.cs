@@ -10,6 +10,9 @@ using static HafizDemoAPI.Controllers.UserController;
 
 namespace HafizDemoAPI.Controllers
 {
+    /// <summary>
+    /// I prefer to use method name instead of verb
+    /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -20,6 +23,10 @@ namespace HafizDemoAPI.Controllers
         {
             cdnCtxt = new CDNContext();
         }
+        /// <summary>
+        /// List all user
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public List<User> GetUser()
         {
@@ -46,40 +53,21 @@ namespace HafizDemoAPI.Controllers
 
         }
 
-        public class User 
-            {
-            public User()
-            {
-                SkillsList = new List<Skills>();
-                HobbiesList = new List<Hobbies>();
-            }
-            public Int32 UserID { get; set; }
-            public string UserName { get; set; }
-            //public string Password { get; set; }
-            public string Mail { get; set; }
-            public string PhoneNo { get; set; }
-            public string Status { get; set; }
-            public string FollowedStatus { get; set; }
-            public List<Skills> SkillsList { get; set; }
-            public List<Hobbies> HobbiesList { get; set; }
-        }
-
-        public class Profile
-        {
-            public string UserName { get; set; }
-            //public string Password { get; set; }
-            public string Mail { get; set; }
-            public string PhoneNo { get; set; }
-            public string SkillList { get; set; }
-            public string HobbyList { get; set; }
-        }
+        /// <summary>
+        /// Return the profile of the current user, required user logged in
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpGet]
         public Profile GetProfile(Int32 UserID)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var CurrentUserID = identity.FindFirst("Id").Value;
-            CDNContext cdnCtxt = new();
+            if (identity.Name != null)
+            {
+                var CurrentUserID = identity.FindFirst("Id").Value; //var CurrentUserID = identity.FindFirst("Id").Value; For security purpose, we can compare the Id stored in claims, during user edit or delete
+            }
+
             var user = cdnCtxt.Users.Where(user => user.UserId== UserID).FirstOrDefault();
             if (user == null) return null;
             var myProfile = new Profile { UserName = user.Username, Mail = user.Mail, PhoneNo = user.PhoneNo };
@@ -87,7 +75,7 @@ namespace HafizDemoAPI.Controllers
             var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == UserID).ToList();
             if (skills != null)
             {
-                System.Text.StringBuilder skillbuilder = new System.Text.StringBuilder();
+                System.Text.StringBuilder skillbuilder = new System.Text.StringBuilder(); //For the read only, I use StringBuilder to concat all the skills,hobbies
                 skills.ForEach(skill =>
                 {
                     skillbuilder.Append($"{skill.SkillName} ({skill.SkillRating}) ");
@@ -105,14 +93,19 @@ namespace HafizDemoAPI.Controllers
             }
             return myProfile;
         }
-
+        /// <summary>
+        /// For editing the profile
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        [Authorize]
         [HttpGet]
         public UserRead GetProfileEdit(Int32 UserID)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity.Name != null)
             {
-                var CurrentUserID = identity.FindFirst("Id").Value;
+                var CurrentUserID = identity.FindFirst("Id").Value; //var CurrentUserID = identity.FindFirst("Id").Value; For security purpose, we can compare the Id stored in claims, during user edit or delete
             }
             CDNContext cdnCtxt = new();
             var user = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId == UserID).FirstOrDefault();
@@ -139,6 +132,11 @@ namespace HafizDemoAPI.Controllers
             return myProfileEdit;
         }
 
+        /// <summary>
+        /// Return the list of user. I planned to only display "followers"
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpGet]
         public List<User> GetUserList(Int32 UserID)
@@ -175,7 +173,11 @@ namespace HafizDemoAPI.Controllers
             });
             return listUser;
         }
-
+        /// <summary>
+        /// For user registration. Use the hashing to secure the password
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost]
         public UserRegStatus CreateUser(Users user)
         {
@@ -187,7 +189,7 @@ namespace HafizDemoAPI.Controllers
             var returnHash = pubFunc.HashPassword(user.Password);
             var User = new ModelCDN.User { Username = user.UserName.ToLower(), Password = returnHash.HashedPassword, Salt = returnHash.Salt, Mail = user.Mail.ToLower(), PhoneNo = user.PhoneNo };
             cdnCtxt.Users.Add(User);
-            cdnCtxt.SaveChanges();
+            cdnCtxt.SaveChanges(); //SaveChanges here so that we can get the UserId
             var Skills = new List<ModelCDN.Skill>();
             user.SkillsList.ForEach(skill =>
             {
@@ -204,18 +206,11 @@ namespace HafizDemoAPI.Controllers
             return new UserRegStatus { Success = true };
         }
 
-        public class UserDelete
-        {
-            public Int32 UserID { get; set; }
-            public string Username { get; set; }
-            public string Password { get; set; }    
-        }
-        
-        public class rtnDeleteUser
-        {
-            public bool Success { get; set; }
-            public string ErrorMsg { get; set; }
-        }
+        /// <summary>
+        /// Delete the user. Require username,password so user need confirm the process
+        /// </summary>
+        /// <param name="UserToDelete"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpPost]
         public rtnDeleteUser DeleteUser(UserDelete UserToDelete)
@@ -235,11 +230,19 @@ namespace HafizDemoAPI.Controllers
             {
                 return new rtnDeleteUser { Success = false, ErrorMsg = "Invalid password" };
             }
+            //New feature in EF 7.0
             cdnCtxt.Skills.Where(u => u.UserId == user.UserId).ExecuteDelete();
             cdnCtxt.Hobbies.Where(u => u.UserId == user.UserId).ExecuteDelete();
             cdnCtxt.Users.Where(u => u.UserId == user.UserId).ExecuteDelete();
             return new rtnDeleteUser { Success = true, ErrorMsg = "" };
         }
+
+        /// <summary>
+        /// Update current user. Check wether the username,email conflict with existing user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [Authorize]
         [HttpPost]
         public UserRegStatus UpdateUser(UserRead user)
         {
@@ -277,36 +280,50 @@ namespace HafizDemoAPI.Controllers
             return new UserRegStatus { Success = true };
         }
 
+        public class User
+        {
+            public User()
+            {
+                SkillsList = new List<Skills>();
+                HobbiesList = new List<Hobbies>();
+            }
+            public Int32 UserID { get; set; }
+            public string UserName { get; set; }
+            //public string Password { get; set; }
+            public string Mail { get; set; }
+            public string PhoneNo { get; set; }
+            public string Status { get; set; }
+            public string FollowedStatus { get; set; }
+            public List<Skills> SkillsList { get; set; }
+            public List<Hobbies> HobbiesList { get; set; }
+        }
+
+        public class Profile
+        {
+            public string UserName { get; set; }
+            //public string Password { get; set; }
+            public string Mail { get; set; }
+            public string PhoneNo { get; set; }
+            public string SkillList { get; set; }
+            public string HobbyList { get; set; }
+        }
+
+        public class UserDelete
+        {
+            public Int32 UserID { get; set; }
+            public string Username { get; set; }
+            public string Password { get; set; }
+        }
+
+        public class rtnDeleteUser
+        {
+            public bool Success { get; set; }
+            public string ErrorMsg { get; set; }
+        }
         public class UserRegStatus
         {
             public bool Success { get; set; }
             public string ErrMsg { get; set; }
-        }
-        internal bool CheckUserExistByEmail(string? Mail)
-        {
-
-            var User = cdnCtxt.Users.AsNoTracking().Where(d => d.Mail == Mail).FirstOrDefault();
-            if (User != null) { return true; }
-            return false;
-
-        }
-
-        internal bool CheckUserExistByUsernameEmail(string? Username, string? Mail)
-        {
-
-            var User = cdnCtxt.Users.AsNoTracking().Where(user => user.Username == Username || user.Mail == Mail).FirstOrDefault();
-            if (User != null) { return true; }
-            return false;
-
-        }
-
-        internal bool CheckUserExistByUsernameEmail(Int32 UserId,string? Username, string? Mail)
-        {
-
-            var User = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId != UserId && (user.Username == Username || user.Mail == Mail)).FirstOrDefault();
-            if (User != null) { return true; }
-            return false;
-
         }
         public class UserRead : Users
         {
@@ -322,11 +339,11 @@ namespace HafizDemoAPI.Controllers
             public string? UserName { get; set; }
 
             public string? Password { get; set; }
-            public string? Mail { get; set;}
+            public string? Mail { get; set; }
             public string? PhoneNo { get; set; }
 
             public List<Skills> SkillsList { get; set; }
-            public List<Hobbies> HobbiesList { get;set; }
+            public List<Hobbies> HobbiesList { get; set; }
 
         }
 
@@ -341,5 +358,37 @@ namespace HafizDemoAPI.Controllers
         {
             public string? HobbyName { get; set; }
         }
+
+/// <summary>
+/// For verifying the user, should put in pubFunc
+/// </summary>
+/// <param name="Username"></param>
+/// <param name="Mail"></param>
+/// <returns></returns>
+        internal bool CheckUserExistByUsernameEmail(string? Username, string? Mail)
+        {
+
+            var User = cdnCtxt.Users.AsNoTracking().Where(user => user.Username == Username || user.Mail == Mail).FirstOrDefault();
+            if (User != null) { return true; }
+            return false;
+
+        }
+
+        /// <summary>
+        /// For verifying the CURRENT user, should put in pubFunc
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <param name="Username"></param>
+        /// <param name="Mail"></param>
+        /// <returns></returns>
+        internal bool CheckUserExistByUsernameEmail(Int32 UserId,string? Username, string? Mail)
+        {
+
+            var User = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId != UserId && (user.Username == Username || user.Mail == Mail)).FirstOrDefault();
+            if (User != null) { return true; }
+            return false;
+
+        }
+
     }
 }

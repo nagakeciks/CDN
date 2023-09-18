@@ -4,18 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Registration</title>
-    <!-- Bootstrap CSS CDN -->
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!--<header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container">
-                <a class="navbar-brand" href="#">Complete Developer Network</a>
-            </div>
-        </nav>
-    </header>-->
+
     <header>
         <h1>Complete Developer Network</h1>
     </header>
@@ -62,8 +56,6 @@
 
 
 
-
-    <!-- Bootstrap JS and jQuery CDN (required for Bootstrap) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -76,10 +68,9 @@ const url = new URL(window.location);
 const searchParams = url.searchParams;
 const userId = searchParams.get('id');
 
-if (!token) {
-            // If the token is not present, redirect to the login page
-            //window.location.href = 'login.html';
-}
+    if (!token) {
+        window.location.href = 'login.html';
+    }
 
 const headers = new Headers({
             'Authorization': `Bearer ${token}`,

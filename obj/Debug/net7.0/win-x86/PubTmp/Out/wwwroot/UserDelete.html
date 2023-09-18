@@ -164,13 +164,13 @@
     </div>
 
     <script>
-        // JavaScript code for showing/hiding the modal and redirection
+
 
         const token = sessionStorage.getItem('token');
 
         // If token is not found, redirect to the login page
         if (!token) {
-            window.location.href = 'login.html'; // Replace 'login.html' with your login page URL
+            window.location.href = 'login.html'; 
         }
 
         function showSuccessModal() {
@@ -188,10 +188,10 @@
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
             modal.style.display = 'none';
-            //window.location = "login.html";
+
         }
 
-        // Event listener to close modals when clicking the "x" button
+
         document.querySelectorAll('.close').forEach(closeButton => {
             closeButton.addEventListener('click', function () {
                 const modalId = this.getAttribute('data-modal');
@@ -208,19 +208,18 @@
                 window.location = "login.html";
             });
         });
-        // Event listener to submit the delete form
+
         const deleteUserForm = document.getElementById('deleteUserForm');
         if (deleteUserForm) {
             deleteUserForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 var currDomain = window.location.origin;
-                //const token = sessionStorage.getItem('token');
+
                 const userId = sessionStorage.getItem('userId');
 
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
 
-                // Replace with your actual API endpoint for user deletion
                 const apiUrl = `${currDomain}/api/user/DeleteUser`;
 
 
@@ -237,9 +236,9 @@
                     .then(data => {
                         console.log(data);
                         if (data.success === true) {
-                            showSuccessModal(); // Show the success modal
+                            showSuccessModal(); 
                         } else {
-                            showErrorModal(data.errorMsg); // Show the error modal with custom error message
+                            showErrorModal(data.errorMsg); 
                         }
                     })
                     .catch(error => {

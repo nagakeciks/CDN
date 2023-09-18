@@ -4,18 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Registration</title>
-    <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!--<header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container">
-                <a class="navbar-brand" href="#">Complete Developer Network</a>
-            </div>
-        </nav>
-    </header>-->
+
     <header>
         <h1>Complete Developer Network</h1>
     </header>
@@ -62,7 +55,6 @@
         </form>
     </div>
 
-    <!-- Modal Popup -->
     <div class="modal" id="confirmationModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -81,8 +73,6 @@
     </div>
 
 
-
-    <!-- Bootstrap JS and jQuery CDN (required for Bootstrap) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -95,15 +85,14 @@ const url = new URL(window.location);
 const searchParams = url.searchParams;
 const userId = searchParams.get('id');
 
-if (!token) {
-            // If the token is not present, redirect to the login page
-            //window.location.href = 'login.html';
-}
+    if (!token) {
+        window.location.href = 'login.html';
+    }
 
-const headers = new Headers({
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-});
+    const headers = new Headers({
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+    });
 
 fetchRegistrationData();
 
@@ -144,14 +133,12 @@ function fetchRegistrationData() {
 document.getElementById('registrationForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            // Collect user input data
             const username = document.getElementById('username').value;
             const mail = document.getElementById('mail').value;
             const phoneno = document.getElementById('phoneno').value;
             const skills = document.getElementById('skills').value;
             const hobbies = document.getElementById('hobbies').value;
 
-            // Create a JSON object to send to the OpenAPI
             const userData = {
                 username,
                 mail,
@@ -170,19 +157,17 @@ document.getElementById('registrationForm').addEventListener('submit', function 
             })
                 .then(response => response.json())
                 .then(data => {
-                    // Handle the response from the API
                     if (data > 0) {
                         
-                        // Show the modal popup if the submission is successful
                         $('#confirmationModal').modal('show');
-                    } else {
-                        // Handle errors if needed
+                    }                   
+                    else          
+                    {
+
                     }
                 })
                 .catch(error => {
-                    // Handle any errors that occur during the API call
                     console.error(error);
-                    // You can show an error message to the user
                 });
 });
     </script>

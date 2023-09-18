@@ -43,21 +43,17 @@
             const $messageItem = $('<li>');
             $messageItem.text(`${sender}: ${message}`);
             $chatList.append($messageItem);
-            //console.log($chatList[0].scrollHeight);
-           // $chatList.scrollTop($chatList[0].scrollHeight);
             scrollToBottom();
         }
 
         function scrollToBottom() {
             var scrollingDiv = document.getElementById("chat-messages");
             scrollingDiv.scrollTop = scrollingDiv.scrollHeight;
-            //console.log(scrollingDiv.scrollTop);
         }
 
         $sendButton.click(function () {
             const message = $messageInput.val();
             if (message.trim() !== '') {
-                //addMessage(message, 'User');
                 SendMessageToRoom(message);
                 $messageInput.val('');
             }

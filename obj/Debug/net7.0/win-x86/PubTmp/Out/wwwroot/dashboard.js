@@ -5,7 +5,7 @@
     const userId = sessionStorage.getItem('userId');
 
     if (!token) {
-        // If the token is not present, redirect to the login page
+        //redirect unauthorized user to the login page
        window.location.href = 'login.html';
     } 
 
@@ -22,13 +22,6 @@
         window.location.href = '/login.html'; 
     });
 
- //function CreateMenu() {
- //    $('.menu li a').hover(function () {
- //           $(this).css("background-color", "#555");
- //       }, function () {
- //           $(this).css("background-color", "#333");
- //       });
- //   };
 
     function getUserList() {
         const apiUrl = `${currDomain}/api/User/GetUserList?UserID=${userId}`;
@@ -64,15 +57,10 @@
                 <p class="card-text">Skills: ${myProfile.skillList}</p>
                 <p class="card-text">Hobbies: ${myProfile.hobbyList}</p>
                 
-            </div>`; //<p class="card-text"><button type="button" class="btn btn-primary edit-button" onClick='window.location = "UserEdit.html"'>Edit</button></p>
+            </div>`; 
             })
             .catch(error => console.error('Error fetching profile:', error));
     }
-
-    $('.edit-button').on('click', function () {
-        alert(1);
-        window.location = 'Edit.html';
-    });
 
     function populateUserList(userData) {
 
