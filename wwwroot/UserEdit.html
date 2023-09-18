@@ -118,7 +118,7 @@
 
         function fetchRegistrationData() {
             fetch(`${currDomain}/api/User/GetProfileEdit?UserID=${userId}`, {
-                method: 'POST',
+                method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
