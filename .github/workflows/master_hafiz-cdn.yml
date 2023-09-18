@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: hafiz-cdn
-          path: ${{env.DOTNET_ROOT}}/HafizDemoAPI.sln
+          path: ${{env.DOTNET_ROOT}}/HafizDemoAPI
 
   deploy:
     runs-on: windows-latest
