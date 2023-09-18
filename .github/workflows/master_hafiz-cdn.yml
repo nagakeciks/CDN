@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy ASP.Net Core app to Azure Web App - hafiz-cdn
 
 on:
@@ -14,7 +11,8 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
@@ -32,14 +30,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: hafiz-cdn
-          path: ${{env.DOTNET_ROOT}}/HafizDemoAPI
+          path: ./out   # Change this path to match your published files
 
   deploy:
     runs-on: windows-latest
     needs: build
     environment:
       name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
       - name: Download artifact from build job
@@ -52,6 +49,5 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'hafiz-cdn'
-          slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2C95EC2579874FF0BF5C08B2AAA782FC }}
-          package: .
+          package: ./hafiz-cdn   # Change this path to match your published files on Azure
