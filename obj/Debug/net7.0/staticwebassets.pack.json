@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\Login.html"
     },
     {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\Script.js",
+      "PackagePath": "staticwebassets\\Script.js"
+    },
+    {
       "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\UserDelete.html",
       "PackagePath": "staticwebassets\\UserDelete.html"
     },
@@ -23,6 +27,22 @@
     {
       "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\dashboard.js",
       "PackagePath": "staticwebassets\\dashboard.js"
+    },
+    {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\favicon-16x16.png",
+      "PackagePath": "staticwebassets\\favicon-16x16.png"
+    },
+    {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\favicon-32x32.png",
+      "PackagePath": "staticwebassets\\favicon-32x32.png"
+    },
+    {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\site.webmanifest",
+      "PackagePath": "staticwebassets\\site.webmanifest"
     },
     {
       "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\style.css",

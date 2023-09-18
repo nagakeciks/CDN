@@ -32,10 +32,16 @@
         <div id="profile" class="card mb-3">
             <!-- User list will be dynamically populated here -->
         </div>
+
         <div id="userListContainer">
-            <!-- User list will be dynamically populated here -->
+            <div id="userListPage">
+                <button class="btn btn-link previous-button">Previous</button>
+                <label for='pagenumber'>Page Number : </label> <span id='pageNum'>1</span>
+                <button class="btn btn-link next-button">Next</button>
+            </div>
+            <div id="userListDyn"></div>
         </div>
-    </div>
+</div>
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

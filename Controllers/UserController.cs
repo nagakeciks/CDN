@@ -23,6 +23,32 @@ namespace HafizDemoAPI.Controllers
         {
             cdnCtxt = new CDNContext();
         }
+
+        [HttpGet]
+        public List<User> GetUserPaging(Int32 PageSize,Int32 PageNum)
+        {
+            var users = cdnCtxt.Users.AsNoTracking().Select(d => new User { UserID = d.UserId, UserName = d.Username, Mail = d.Mail, PhoneNo = d.PhoneNo }).Skip(PageNum * PageSize).Take(PageSize).ToList();
+            users.ForEach(user =>
+            {
+                var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
+                var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
+                skills.ForEach(d =>
+                {
+                    user.SkillsList.Add(
+                        new Skills { SkillName = d.SkillName, SkillRatings = d.SkillRating }
+                    );
+                });
+
+                hobbies.ForEach(d =>
+                {
+                    user.HobbiesList.Add(
+                        new Hobbies { HobbyName = d.HobbyName }
+                    );
+                });
+            });
+            return users;
+
+        }
         /// <summary>
         /// List all user
         /// </summary>
@@ -172,6 +198,61 @@ namespace HafizDemoAPI.Controllers
 
             });
             return listUser;
+        }
+
+        public class UserPaging
+        {
+            public UserPaging()
+            {
+                UserList = new List<User>();
+            }
+            public Int32 MaxSize { get; set; }
+            public List<User> UserList { get; set; }
+        }
+
+        [Authorize]
+        [HttpGet]
+        public UserPaging GetUserListPaging(Int32 UserID,Int32 PageSize,Int32 PageNum)
+        {
+            UserPaging userPaging = new();
+            var listUser = new List<User>();
+            CDNContext cdnCtxt = new();
+            var userCount = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId != UserID).Count();
+            userPaging.MaxSize = userCount / PageSize;
+            var Users = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId != UserID).Skip(PageSize * (PageNum-1)).Take(PageSize).ToList();
+
+            foreach (var user in Users)
+            {
+                var userConn = cdnCtxt.CDNUserConn.Where(u => u.UserID == user.UserId).AsNoTracking().OrderByDescending(i => i.Id).FirstOrDefault();
+                listUser.Add(new User
+                {
+                    UserID = user.UserId,
+                    UserName = user.Username,
+                    Mail = user.Mail,
+                    PhoneNo = user.PhoneNo,
+                    Status = userConn != null && userConn.Connected ? "Online" : "Offline",
+                    FollowedStatus = "Yes"
+
+                });
+            }
+
+            listUser.ForEach(user =>
+            {
+                List<Skills> skillList = new List<Skills>();
+                var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
+                var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
+                skills.ForEach(d =>
+                {
+
+                    skillList.Add(
+                        new Skills { SkillName = d.SkillName, SkillRatings = d.SkillRating }
+                    );
+                });
+                user.SkillsList.AddRange(skillList);
+
+            });
+            userPaging.UserList = listUser;
+            return userPaging;
         }
         /// <summary>
         /// For user registration. Use the hashing to secure the password
