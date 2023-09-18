@@ -50,4 +50,4 @@ jobs:
         with:
           app-name: 'hafiz-cdn'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2C95EC2579874FF0BF5C08B2AAA782FC }}
-          package: ./hafiz-cdn   # Change this path to match your published files on Azure
+          package: ./  # Change this path to match your published files on Azure
