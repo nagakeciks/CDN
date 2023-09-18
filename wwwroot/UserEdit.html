@@ -68,7 +68,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">User Updated</h5>
-                    <button type="button" class="close" data-dismiss="modal";">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" ;">&times;</button>
                 </div>
                 <div class="modal-body">
                     Your profile has been updated
@@ -100,7 +100,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+    <script src="Script.js"></script>
     <script>
         var currDomain = window.location.origin;
         const token = sessionStorage.getItem('token');
@@ -136,12 +136,12 @@
                         const skillInput = document.createElement('div');
                         skillInput.className = 'input-group mb-2';
                         skillInput.innerHTML = `
-                                        <input type="text" class="form-control" name="skills[]" value="${skill.skillName}" required>
-                                        <input type="number" class="form-control" name="ratings[]" min="1" max="5" value="${skill.skillRatings}" placeholder="1-5">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">Rating</span>
-                                            <button type="button" class="btn btn-danger remove-skill">Remove</button>
-                                        </div>`;
+                                            <input type="text" class="form-control" name="skills[]" value="${skill.skillName}" required>
+                                            <input type="number" class="form-control" name="ratings[]" min="1" max="5" value="${skill.skillRatings}" placeholder="1-5">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">Rating</span>
+                                                <button type="button" class="btn btn-danger remove-skill">Remove</button>
+                                            </div>`;
                         skillsContainer.appendChild(skillInput);
                         const removeSkillButton = skillInput.querySelector('.remove-skill');
                         removeSkillButton.addEventListener('click', function () {
@@ -154,12 +154,12 @@
                         const newSkillInput = document.createElement('div');
                         newSkillInput.className = 'input-group mb-2';
                         newSkillInput.innerHTML = `
-                                    <input type="text" class="form-control" name="skills[]" required>
-                                        <input type="number" class="form-control" name="ratings[]" min="1" max="5" placeholder="1-5" value="1">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">Rating</span>
-                                            <button type="button" class="btn btn-danger remove-skill">Remove</button>
-                                        </div>`;
+                                        <input type="text" class="form-control" name="skills[]" required>
+                                            <input type="number" class="form-control" name="ratings[]" min="1" max="5" placeholder="1-5" value="1">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">Rating</span>
+                                                <button type="button" class="btn btn-danger remove-skill">Remove</button>
+                                            </div>`;
                         skillsContainer.appendChild(newSkillInput);
                         const removeSkillButton = newSkillInput.querySelector('.remove-skill');
                         removeSkillButton.addEventListener('click', function () {
@@ -172,10 +172,10 @@
                         const hobbyInput = document.createElement('div');
                         hobbyInput.className = 'input-group mb-2';
                         hobbyInput.innerHTML = `
-                                        <input type="text" class="form-control" name="hobbies[]" value="${hobby.hobbyName}" required>
-                                        <div class="input-group-append">
-                                            <button type="button" class="btn btn-danger remove-hobby">Remove</button>
-                                        </div>`;
+                                            <input type="text" class="form-control" name="hobbies[]" value="${hobby.hobbyName}" required>
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-danger remove-hobby">Remove</button>
+                                            </div>`;
                         hobbiesContainer.appendChild(hobbyInput);
                         const removeHobbyButton = hobbyInput.querySelector('.remove-hobby');
                         removeHobbyButton.addEventListener('click', function () {
@@ -188,10 +188,10 @@
                         const newHobbyInput = document.createElement('div');
                         newHobbyInput.className = 'input-group mb-2';
                         newHobbyInput.innerHTML = `
-                                    <input type="text" class="form-control" name="hobbies[]" required>
-                                        <div class="input-group-append">
-                                            <button type="button" class="btn btn-danger remove-hobby">Remove</button>
-                                        </div>`;
+                                        <input type="text" class="form-control" name="hobbies[]" required>
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-danger remove-hobby">Remove</button>
+                                            </div>`;
                         hobbiesContainer.appendChild(newHobbyInput);
                         const removeHobbyButton = newHobbyInput.querySelector('.remove-hobby');
                         removeHobbyButton.addEventListener('click', function () {
@@ -213,13 +213,13 @@
                 const skillInput = document.createElement('div');
                 skillInput.className = 'input-group mb-2';
                 skillInput.innerHTML = `
-                                        <input type="text" class="form-control" name="skills[]" value="${skillRating.skill}" required>
-                                        <input type="number" class="form-control" name="ratings[]" min="1" max="5" value="${skillRating.rating}" placeholder="1-5">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">Rating</span>
-                                            <button type="button" class="btn btn-danger remove-skill">Remove</button>
-                                        </div>
-                                    `;
+                                            <input type="text" class="form-control" name="skills[]" value="${skillRating.skill}" required>
+                                            <input type="number" class="form-control" name="ratings[]" min="1" max="5" value="${skillRating.rating}" placeholder="1-5">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">Rating</span>
+                                                <button type="button" class="btn btn-danger remove-skill">Remove</button>
+                                            </div>
+                                        `;
                 skillsContainer.appendChild(skillInput);
 
                 const removeSkillButton = skillInput.querySelector('.remove-skill');

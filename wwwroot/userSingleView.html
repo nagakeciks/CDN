@@ -16,7 +16,7 @@
     <ul>
         <li><a href="dashboard.html">Dashboard</a></li>
         <li><a class="active" href="userSingle.html">Simple CDN View</a></li>
-        <li><a  href="userSinglelist.html">Simple CDN List</a></li>
+        <li><a href="userSinglelist.html">Simple CDN List</a></li>
     </ul>
     <div class="container">
         <h2>User Detail</h2>
@@ -48,7 +48,7 @@
 
             <div class="form-group">
                 <label for="hobby">Hobby:</label>
-                <label id="hobbies" class="form-control"/>
+                <label id="hobbies" class="form-control" />
             </div>
 
         </form>
@@ -59,7 +59,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+    <script src="Script.js"></script>
     <script>
 
 var currDomain = window.location.origin;
@@ -68,9 +68,9 @@ const url = new URL(window.location);
 const searchParams = url.searchParams;
 const userId = searchParams.get('id');
 
-    if (!token) {
-        window.location.href = 'login.html';
-    }
+if (!token) {
+            window.location.href = 'login.html';
+}
 
 const headers = new Headers({
             'Authorization': `Bearer ${token}`,

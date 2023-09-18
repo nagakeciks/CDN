@@ -162,7 +162,7 @@
             <p id="errorMessage">An error occurred while deleting the user.</p>
         </div>
     </div>
-
+    <script src="Script.js"></script>
     <script>
 
 
@@ -170,7 +170,7 @@
 
         // If token is not found, redirect to the login page
         if (!token) {
-            window.location.href = 'login.html'; 
+            window.location.href = 'login.html';
         }
 
         function showSuccessModal() {
@@ -236,9 +236,9 @@
                     .then(data => {
                         console.log(data);
                         if (data.success === true) {
-                            showSuccessModal(); 
+                            showSuccessModal();
                         } else {
-                            showErrorModal(data.errorMsg); 
+                            showErrorModal(data.errorMsg);
                         }
                     })
                     .catch(error => {
