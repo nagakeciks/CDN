@@ -80,16 +80,6 @@
     <script>
 
         var currDomain = window.location.origin;
-        const token = sessionStorage.getItem('token');
-
-        if (!token) {
-            window.location.href = 'login.html';
-        }
-
-        const headers = new Headers({
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-        });
 
 
 

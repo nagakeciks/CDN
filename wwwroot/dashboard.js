@@ -108,19 +108,24 @@
     }
 
     $('.next-button').on('click', function () {
+
         if (currentPage < maxPage) {
             currentPage++;
             getUserListPaging();
             displayItems();
         }
+        if (currentPage == maxPage) {return; }
     });
 
     $('.previous-button').on('click', function () {
+        if (currentPage == 1) { return; }
         if (currentPage > 1) {
             currentPage--;
             getUserListPaging();
             displayItems();
         }
+        if (currentPage < maxPage) { $('.next-button').css("display", "inline"); }
+        
     });
 
     //function CreatePaging() {

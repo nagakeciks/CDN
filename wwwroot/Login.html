@@ -61,6 +61,7 @@
                         console.log(data);
                         // Authentication successful, store the token and user ID in session storage
                         //I use SessionStorage instead of LocalStorage, so it will be easier for me to simulate multiple user logged in
+                        sessionStorage.clear();
                         sessionStorage.setItem('token', data.token);
                         sessionStorage.setItem('userId', data.userID);
 

@@ -6,6 +6,12 @@ if (!token) {
     //redirect unauthorized user to the login page
     window.location.href = 'login.html';
 }
+
+
+const intervalId = setInterval(function () {
+    isTokenValid();
+}, 60000);
+
 if (!isTokenValid(token))
 {
     console.log('Token has expired or is invalid.')
@@ -18,10 +24,10 @@ const headers = new Headers({
     'Content-Type': 'application/json',
 });
 
-function isTokenValid(token) {
+function isTokenValid() {
+    console.log('Validating Token');
     // Decode the JWT token without verifying the signature
     const tokenData = parseJwt(token);
-
     if (!tokenData) {
         // Token couldn't be parsed; it's invalid
         return false;

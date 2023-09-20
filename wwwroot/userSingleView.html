@@ -63,24 +63,14 @@
     <script>
 
 var currDomain = window.location.origin;
-const token = sessionStorage.getItem('token');
 const url = new URL(window.location);
 const searchParams = url.searchParams;
-const userId = searchParams.get('id');
-
-if (!token) {
-            window.location.href = 'login.html';
-}
-
-const headers = new Headers({
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-});
+const userIdView = searchParams.get('id');
 
 fetchRegistrationData();
 
 function fetchRegistrationData() {
-            fetch(`${currDomain}/api/SimpleUser/${userId}`, {
+    fetch(`${currDomain}/api/SimpleUser/${userIdView}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +80,7 @@ function fetchRegistrationData() {
                     if (response.ok) {
                         return response.json()
                     } else if (response.status === 404) {
-                        alert(`No Record found : ${userId}`);
+                        alert(`No Record found : ${userIdView}`);
                         window.location.href = 'usersinglelist.html';
                         return promise.reject('error 404')
                     } else {

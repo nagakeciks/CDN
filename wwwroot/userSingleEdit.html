@@ -80,24 +80,16 @@
     <script>
 
 var currDomain = window.location.origin;
-const token = sessionStorage.getItem('token');
 const url = new URL(window.location);
 const searchParams = url.searchParams;
-const userId = searchParams.get('id');
+const userIdEdit = searchParams.get('id');
 
-if (!token) {
-            window.location.href = 'login.html';
-}
 
-const headers = new Headers({
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-});
 
 fetchRegistrationData();
 
 function fetchRegistrationData() {
-            fetch(`${currDomain}/api/SimpleUser/${userId}`, {
+    fetch(`${currDomain}/api/SimpleUser/${userIdEdit}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -107,7 +99,7 @@ function fetchRegistrationData() {
                     if (response.ok) {
                         return response.json()
                     } else if (response.status === 404) {
-                        alert(`No Record found : ${userId}`);
+                        alert(`No Record found : ${userIdEdit}`);
                         window.location.href = 'usersinglelist.html';
                         return promise.reject('error 404')
                     } else {
@@ -148,7 +140,7 @@ document.getElementById('registrationForm').addEventListener('submit', function 
             };
 
 
-            fetch(`${currDomain}/api/SimpleUser/${userId}`, {
+    fetch(`${currDomain}/api/SimpleUser/${userIdEdit}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

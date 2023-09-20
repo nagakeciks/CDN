@@ -17,52 +17,52 @@ namespace HafizDemoAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        static CDNContext cdnCtxt = new();
 
-        public UserController()
-        {
-            cdnCtxt = new CDNContext();
-        }
 
         [HttpGet]
         public IActionResult Logout(Int32 UserID, string ConnID)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity.Name != null)
+            using (CDNContext cdnCtxt = new())
             {
-                var CurrentUserID = identity.FindFirst("Id").Value; //var CurrentUserID = identity.FindFirst("Id").Value; For security purpose, we can compare the Id stored in claims, during user edit or delete
-            }
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                if (identity.Name != null)
+                {
+                    var CurrentUserID = identity.FindFirst("Id").Value; //var CurrentUserID = identity.FindFirst("Id").Value; For security purpose, we can compare the Id stored in claims, during user edit or delete
+                }
 
-            var conn = cdnCtxt.CDNUserConn.Where(conn => conn.UserID == UserID && conn.ConnectionId == ConnID).ExecuteUpdate(setters => setters
-                            .SetProperty(b => b.Connected,false)
-                            );
-            return Ok(conn);
+                var conn = cdnCtxt.CDNUserConn.Where(conn => conn.UserID == UserID && conn.ConnectionId == ConnID).ExecuteUpdate(setters => setters
+                                .SetProperty(b => b.Connected, false)
+                                );
+                return Ok(conn);
+            }
         }
 
         [HttpGet]
         public List<User> GetUserPaging(Int32 PageSize,Int32 PageNum)
         {
-            var users = cdnCtxt.Users.AsNoTracking().Select(d => new User { UserID = d.UserId, UserName = d.Username, Mail = d.Mail, PhoneNo = d.PhoneNo }).Skip(PageNum * PageSize).Take(PageSize).ToList();
-            users.ForEach(user =>
+            using (CDNContext cdnCtxt = new())
             {
-                var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
-                var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
-                skills.ForEach(d =>
+                var users = cdnCtxt.Users.AsNoTracking().Select(d => new User { UserID = d.UserId, UserName = d.Username, Mail = d.Mail, PhoneNo = d.PhoneNo }).Skip(PageNum * PageSize).Take(PageSize).ToList();
+                users.ForEach(user =>
                 {
-                    user.SkillsList.Add(
-                        new Skills { SkillName = d.SkillName, SkillRatings = d.SkillRating }
-                    );
-                });
+                    var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
+                    var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
+                    skills.ForEach(d =>
+                    {
+                        user.SkillsList.Add(
+                            new Skills { SkillName = d.SkillName, SkillRatings = d.SkillRating }
+                        );
+                    });
 
-                hobbies.ForEach(d =>
-                {
-                    user.HobbiesList.Add(
-                        new Hobbies { HobbyName = d.HobbyName }
-                    );
+                    hobbies.ForEach(d =>
+                    {
+                        user.HobbiesList.Add(
+                            new Hobbies { HobbyName = d.HobbyName }
+                        );
+                    });
                 });
-            });
-            return users;
-
+                return users;
+            }
         }
         /// <summary>
         /// List all user
@@ -71,27 +71,29 @@ namespace HafizDemoAPI.Controllers
         [HttpGet]
         public List<User> GetUser()
         {
-            var users = cdnCtxt.Users.AsNoTracking().Select(d => new User { UserID = d.UserId, UserName = d.Username, Mail = d.Mail, PhoneNo = d.PhoneNo }).ToList();
-            users.ForEach(user =>
+            using (CDNContext cdnCtxt = new())
             {
-                var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
-                var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
-                skills.ForEach(d =>
+                var users = cdnCtxt.Users.AsNoTracking().Select(d => new User { UserID = d.UserId, UserName = d.Username, Mail = d.Mail, PhoneNo = d.PhoneNo }).ToList();
+                users.ForEach(user =>
                 {
-                    user.SkillsList.Add(
-                        new Skills { SkillName = d.SkillName, SkillRatings = d.SkillRating }
-                    );
-                });
+                    var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
+                    var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
+                    skills.ForEach(d =>
+                    {
+                        user.SkillsList.Add(
+                            new Skills { SkillName = d.SkillName, SkillRatings = d.SkillRating }
+                        );
+                    });
 
-                hobbies.ForEach(d =>
-                {
-                    user.HobbiesList.Add(
-                        new Hobbies { HobbyName = d.HobbyName }
-                    );
+                    hobbies.ForEach(d =>
+                    {
+                        user.HobbiesList.Add(
+                            new Hobbies { HobbyName = d.HobbyName }
+                        );
+                    });
                 });
-            });
-            return users;
-
+                return users;
+            }
         }
 
         /// <summary>
@@ -103,36 +105,39 @@ namespace HafizDemoAPI.Controllers
         [HttpGet]
         public Profile GetProfile(Int32 UserID)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity.Name != null)
+            using (CDNContext cdnCtxt = new())
             {
-                var CurrentUserID = identity.FindFirst("Id").Value; //var CurrentUserID = identity.FindFirst("Id").Value; For security purpose, we can compare the Id stored in claims, during user edit or delete
-            }
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                if (identity.Name != null)
+                {
+                    var CurrentUserID = identity.FindFirst("Id").Value; //var CurrentUserID = identity.FindFirst("Id").Value; For security purpose, we can compare the Id stored in claims, during user edit or delete
+                }
 
-            var user = cdnCtxt.Users.Where(user => user.UserId== UserID).FirstOrDefault();
-            if (user == null) return null;
-            var myProfile = new Profile { UserName = user.Username, Mail = user.Mail, PhoneNo = user.PhoneNo };
-            var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == UserID).ToList();
-            var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == UserID).ToList();
-            if (skills != null)
-            {
-                System.Text.StringBuilder skillbuilder = new System.Text.StringBuilder(); //For the read only, I use StringBuilder to concat all the skills,hobbies
-                skills.ForEach(skill =>
+                var user = cdnCtxt.Users.Where(user => user.UserId == UserID).FirstOrDefault();
+                if (user == null) return null;
+                var myProfile = new Profile { UserName = user.Username, Mail = user.Mail, PhoneNo = user.PhoneNo };
+                var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == UserID).ToList();
+                var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == UserID).ToList();
+                if (skills != null)
                 {
-                    skillbuilder.Append($"{skill.SkillName} ({skill.SkillRating}) ");
-                });
-                myProfile.SkillList = skillbuilder.ToString();
-            }
-            if (hobbies != null)
-            {
-                System.Text.StringBuilder hobbybuilder = new System.Text.StringBuilder();
-                hobbies.ForEach(hobby =>
+                    System.Text.StringBuilder skillbuilder = new System.Text.StringBuilder(); //For the read only, I use StringBuilder to concat all the skills,hobbies
+                    skills.ForEach(skill =>
+                    {
+                        skillbuilder.Append($"{skill.SkillName} ({skill.SkillRating}) ");
+                    });
+                    myProfile.SkillList = skillbuilder.ToString();
+                }
+                if (hobbies != null)
                 {
-                    hobbybuilder.Append($"{hobby.HobbyName} ");
-                });
-                myProfile.HobbyList = hobbybuilder.ToString();
+                    System.Text.StringBuilder hobbybuilder = new System.Text.StringBuilder();
+                    hobbies.ForEach(hobby =>
+                    {
+                        hobbybuilder.Append($"{hobby.HobbyName} ");
+                    });
+                    myProfile.HobbyList = hobbybuilder.ToString();
+                }
+                return myProfile;
             }
-            return myProfile;
         }
         /// <summary>
         /// For editing the profile
@@ -143,34 +148,36 @@ namespace HafizDemoAPI.Controllers
         [HttpGet]
         public UserRead GetProfileEdit(Int32 UserID)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity.Name != null)
+            using (CDNContext cdnCtxt = new())
             {
-                var CurrentUserID = identity.FindFirst("Id").Value; //var CurrentUserID = identity.FindFirst("Id").Value; For security purpose, we can compare the Id stored in claims, during user edit or delete
-            }
-            CDNContext cdnCtxt = new();
-            var user = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId == UserID).FirstOrDefault();
-            if (user == null) return null;
-            var myProfileEdit = new UserRead {UserID = user.UserId, UserName = user.Username, Mail = user.Mail, PhoneNo = user.PhoneNo};
-            var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == UserID).ToList();
-            var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == UserID).ToList();
-            if (skills != null)
-            {
-                skills.ForEach(skill =>
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                if (identity.Name != null)
                 {
-                    myProfileEdit.SkillsList.Add(new Skills { SkillName = skill.SkillName , SkillRatings = skill.SkillRating});
-                });
-            }
-            if (hobbies != null)
-            {
-
-                hobbies.ForEach(hobby =>
+                    var CurrentUserID = identity.FindFirst("Id").Value; //var CurrentUserID = identity.FindFirst("Id").Value; For security purpose, we can compare the Id stored in claims, during user edit or delete
+                }
+                var user = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId == UserID).FirstOrDefault();
+                if (user == null) return null;
+                var myProfileEdit = new UserRead { UserID = user.UserId, UserName = user.Username, Mail = user.Mail, PhoneNo = user.PhoneNo };
+                var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == UserID).ToList();
+                var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == UserID).ToList();
+                if (skills != null)
                 {
-                    myProfileEdit.HobbiesList.Add(new Hobbies { HobbyName = hobby.HobbyName });
-                });
+                    skills.ForEach(skill =>
+                    {
+                        myProfileEdit.SkillsList.Add(new Skills { SkillName = skill.SkillName, SkillRatings = skill.SkillRating });
+                    });
+                }
+                if (hobbies != null)
+                {
 
+                    hobbies.ForEach(hobby =>
+                    {
+                        myProfileEdit.HobbiesList.Add(new Hobbies { HobbyName = hobby.HobbyName });
+                    });
+
+                }
+                return myProfileEdit;
             }
-            return myProfileEdit;
         }
 
         /// <summary>
@@ -182,37 +189,44 @@ namespace HafizDemoAPI.Controllers
         [HttpGet]
         public List<User> GetUserList(Int32 UserID)
         {
-            var listUser = new List<User>();
-            CDNContext cdnCtxt = new();
-            var Users = cdnCtxt.Users.Where(user => user.UserId != UserID).ToList();
-
-            foreach (var user in Users)
+            using (CDNContext cdnCtxt = new())
             {
-                var userConn = cdnCtxt.CDNUserConn.Where(u => u.UserID == user.UserId).AsNoTracking().OrderByDescending(i => i.Id).FirstOrDefault();
-                listUser.Add(new User
+                var listUser = new List<User>();
+
+                var Users = cdnCtxt.Users.Where(user => user.UserId != UserID).ToList();
+
+                foreach (var user in Users)
                 {
-                    UserID = user.UserId, UserName = user.Username, Mail = user.Mail, PhoneNo = user.PhoneNo,
-                    Status = userConn != null && userConn.Connected ? "Online" : "Offline", FollowedStatus = "Yes"
+                    var userConn = cdnCtxt.CDNUserConn.Where(u => u.UserID == user.UserId).AsNoTracking().OrderByDescending(i => i.Id).FirstOrDefault();
+                    listUser.Add(new User
+                    {
+                        UserID = user.UserId,
+                        UserName = user.Username,
+                        Mail = user.Mail,
+                        PhoneNo = user.PhoneNo,
+                        Status = userConn != null && userConn.Connected ? "Online" : "Offline",
+                        FollowedStatus = "Yes"
+
+                    });
+                }
+
+                listUser.ForEach(user =>
+                {
+                    List<Skills> skillList = new List<Skills>();
+                    var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
+                    var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
+                    skills.ForEach(d =>
+                    {
+
+                        skillList.Add(
+                            new Skills { SkillName = d.SkillName, SkillRatings = d.SkillRating }
+                        );
+                    });
+                    user.SkillsList.AddRange(skillList);
 
                 });
+                return listUser;
             }
-           
-            listUser.ForEach(user =>
-            {
-                List<Skills> skillList = new List<Skills>();
-                var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
-                var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
-                skills.ForEach(d =>
-                {
-
-                    skillList.Add(
-                        new Skills { SkillName = d.SkillName,SkillRatings = d.SkillRating }
-                    );
-                });
-                user.SkillsList.AddRange(skillList);
-
-            });
-            return listUser;
         }
 
         public class UserPaging
@@ -225,49 +239,51 @@ namespace HafizDemoAPI.Controllers
             public List<User> UserList { get; set; }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public UserPaging GetUserListPaging(Int32 UserID,Int32 PageSize,Int32 PageNum)
         {
-            UserPaging userPaging = new();
-            var listUser = new List<User>();
-            CDNContext cdnCtxt = new();
-            var userCount = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId != UserID).Count();
-            userPaging.MaxSize = userCount / PageSize;
-            var Users = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId != UserID).Skip(PageSize * (PageNum-1)).Take(PageSize).ToList();
-
-            foreach (var user in Users)
+            using (CDNContext cdnCtxt = new())
             {
-                var userConn = cdnCtxt.CDNUserConn.Where(u => u.UserID == user.UserId).AsNoTracking().OrderByDescending(i => i.Id).FirstOrDefault();
-                listUser.Add(new User
+                UserPaging userPaging = new();
+                var listUser = new List<User>();
+                var userCount = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId != UserID).Count();
+                userPaging.MaxSize = userCount / PageSize;
+                var Users = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId != UserID).Skip(PageSize * (PageNum - 1)).Take(PageSize).ToList();
+
+                foreach (var user in Users)
                 {
-                    UserID = user.UserId,
-                    UserName = user.Username,
-                    Mail = user.Mail,
-                    PhoneNo = user.PhoneNo,
-                    Status = userConn != null && userConn.Connected ? "Online" : "Offline",
-                    FollowedStatus = "Yes"
+                    var userConn = cdnCtxt.CDNUserConn.Where(u => u.UserID == user.UserId).AsNoTracking().OrderByDescending(i => i.Id).FirstOrDefault();
+                    listUser.Add(new User
+                    {
+                        UserID = user.UserId,
+                        UserName = user.Username,
+                        Mail = user.Mail,
+                        PhoneNo = user.PhoneNo,
+                        Status = userConn != null && userConn.Connected ? "Online" : "Offline",
+                        FollowedStatus = "Yes"
+
+                    });
+                }
+
+                listUser.ForEach(user =>
+                {
+                    List<Skills> skillList = new List<Skills>();
+                    var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
+                    var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
+                    skills.ForEach(d =>
+                    {
+
+                        skillList.Add(
+                            new Skills { SkillName = d.SkillName, SkillRatings = d.SkillRating }
+                        );
+                    });
+                    user.SkillsList.AddRange(skillList);
 
                 });
+                userPaging.UserList = listUser;
+                return userPaging;
             }
-
-            listUser.ForEach(user =>
-            {
-                List<Skills> skillList = new List<Skills>();
-                var skills = cdnCtxt.Skills.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
-                var hobbies = cdnCtxt.Hobbies.AsNoTracking().Where(d => d.UserId == user.UserID).ToList();
-                skills.ForEach(d =>
-                {
-
-                    skillList.Add(
-                        new Skills { SkillName = d.SkillName, SkillRatings = d.SkillRating }
-                    );
-                });
-                user.SkillsList.AddRange(skillList);
-
-            });
-            userPaging.UserList = listUser;
-            return userPaging;
         }
         /// <summary>
         /// For user registration. Use the hashing to secure the password
@@ -277,29 +293,32 @@ namespace HafizDemoAPI.Controllers
         [HttpPost]
         public UserRegStatus CreateUser(Users user)
         {
-            if (CheckUserExistByUsernameEmail(user.UserName.ToLower(),user.Mail.ToLower()))
+            using (CDNContext cdnCtxt = new())
             {
-                return new UserRegStatus { Success = false, ErrMsg = "Please use different username or email" };
+                if (CheckUserExistByUsernameEmail(user.UserName.ToLower(), user.Mail.ToLower()))
+                {
+                    return new UserRegStatus { Success = false, ErrMsg = "Please use different username or email" };
+                }
+                PubFunc pubFunc = new();
+                var returnHash = pubFunc.HashPassword(user.Password);
+                var User = new ModelCDN.User { Username = user.UserName.ToLower(), Password = returnHash.HashedPassword, Salt = returnHash.Salt, Mail = user.Mail.ToLower(), PhoneNo = user.PhoneNo };
+                cdnCtxt.Users.Add(User);
+                cdnCtxt.SaveChanges(); //SaveChanges here so that we can get the UserId
+                var Skills = new List<ModelCDN.Skill>();
+                user.SkillsList.ForEach(skill =>
+                {
+                    Skills.Add(new ModelCDN.Skill { UserId = User.UserId, SkillName = skill.SkillName, SkillRating = skill.SkillRatings });
+                });
+                cdnCtxt.Skills.AddRange(Skills);
+                var hobbies = new List<ModelCDN.Hobby>();
+                user.HobbiesList.ForEach(hobby =>
+                {
+                    hobbies.Add(new Hobby { UserId = User.UserId, HobbyName = hobby.HobbyName });
+                });
+                cdnCtxt.Hobbies.AddRange(hobbies);
+                cdnCtxt.SaveChanges();
+                return new UserRegStatus { Success = true };
             }
-            PubFunc pubFunc = new();
-            var returnHash = pubFunc.HashPassword(user.Password);
-            var User = new ModelCDN.User { Username = user.UserName.ToLower(), Password = returnHash.HashedPassword, Salt = returnHash.Salt, Mail = user.Mail.ToLower(), PhoneNo = user.PhoneNo };
-            cdnCtxt.Users.Add(User);
-            cdnCtxt.SaveChanges(); //SaveChanges here so that we can get the UserId
-            var Skills = new List<ModelCDN.Skill>();
-            user.SkillsList.ForEach(skill =>
-            {
-                Skills.Add(new ModelCDN.Skill { UserId = User.UserId, SkillName = skill.SkillName, SkillRating = skill.SkillRatings });
-            });
-            cdnCtxt.Skills.AddRange(Skills);
-            var hobbies = new List<ModelCDN.Hobby>();
-            user.HobbiesList.ForEach(hobby =>
-            {
-                hobbies.Add(new Hobby {UserId = User.UserId, HobbyName = hobby.HobbyName });
-            });
-            cdnCtxt.Hobbies.AddRange(hobbies);
-            cdnCtxt.SaveChanges();
-            return new UserRegStatus { Success = true };
         }
 
         /// <summary>
@@ -311,26 +330,29 @@ namespace HafizDemoAPI.Controllers
         [HttpPost]
         public rtnDeleteUser DeleteUser(UserDelete UserToDelete)
         {
-            PubFunc pubFunc = new();
-            var user = cdnCtxt.Users.AsNoTracking().Where(u => u.UserId == UserToDelete.UserID).FirstOrDefault();
+            using (CDNContext cdnCtxt = new())
+            {
+                PubFunc pubFunc = new();
+                var user = cdnCtxt.Users.AsNoTracking().Where(u => u.UserId == UserToDelete.UserID).FirstOrDefault();
 
-            if (user == null)
-            {
-                return new rtnDeleteUser { Success = false , ErrorMsg = "User not found" };
+                if (user == null)
+                {
+                    return new rtnDeleteUser { Success = false, ErrorMsg = "User not found" };
+                }
+                if (String.Compare(UserToDelete.Username, user.Username, comparisonType: StringComparison.OrdinalIgnoreCase) > 0)
+                {
+                    return new rtnDeleteUser { Success = false, ErrorMsg = "Invalid username" };
+                }
+                if (!pubFunc.VerifyPassword(UserToDelete.Password, user.Password, Convert.FromBase64String(user.Salt)))
+                {
+                    return new rtnDeleteUser { Success = false, ErrorMsg = "Invalid password" };
+                }
+                //New feature in EF 7.0
+                cdnCtxt.Skills.Where(u => u.UserId == user.UserId).ExecuteDelete();
+                cdnCtxt.Hobbies.Where(u => u.UserId == user.UserId).ExecuteDelete();
+                cdnCtxt.Users.Where(u => u.UserId == user.UserId).ExecuteDelete();
+                return new rtnDeleteUser { Success = true, ErrorMsg = "" };
             }
-            if (String.Compare(UserToDelete.Username, user.Username, comparisonType: StringComparison.OrdinalIgnoreCase) > 0)
-            {
-                return new rtnDeleteUser { Success = false, ErrorMsg = "Invalid username" };
-            }
-            if (!pubFunc.VerifyPassword(UserToDelete.Password, user.Password, Convert.FromBase64String(user.Salt))) 
-            {
-                return new rtnDeleteUser { Success = false, ErrorMsg = "Invalid password" };
-            }
-            //New feature in EF 7.0
-            cdnCtxt.Skills.Where(u => u.UserId == user.UserId).ExecuteDelete();
-            cdnCtxt.Hobbies.Where(u => u.UserId == user.UserId).ExecuteDelete();
-            cdnCtxt.Users.Where(u => u.UserId == user.UserId).ExecuteDelete();
-            return new rtnDeleteUser { Success = true, ErrorMsg = "" };
         }
 
         /// <summary>
@@ -342,38 +364,41 @@ namespace HafizDemoAPI.Controllers
         [HttpPost]
         public UserRegStatus UpdateUser(UserRead user)
         {
-            if (CheckUserExistByUsernameEmail(user.UserID, user.UserName.ToLower(), user.Mail.ToLower()))
+            using (CDNContext cdnCtxt = new())
             {
-                return new UserRegStatus { Success = false, ErrMsg = "Please use different username or email" };
-            }
-            PubFunc pubFunc = new();
-            var returnHash = pubFunc.HashPassword(user.Password);
-            var userUpdate = cdnCtxt.Users.Where(u => u.UserId == user.UserID).FirstOrDefault();
-            userUpdate.Username = user.UserName;
-            userUpdate.Password = returnHash.HashedPassword;
-            userUpdate.Salt = returnHash.Salt;
-            userUpdate.Mail = user.Mail;
-            userUpdate.PhoneNo= user.PhoneNo;
-            //Reset Skills, Hobbies
-            var SkillRemove = cdnCtxt.Skills.Where(u => u.UserId == user.UserID).ToList();
-            cdnCtxt.Skills.RemoveRange(SkillRemove);
-            var hobbyRemove = cdnCtxt.Hobbies.Where(u => u.UserId == user.UserID).ToList();
-            cdnCtxt.Hobbies.RemoveRange(hobbyRemove);
+                if (CheckUserExistByUsernameEmail(user.UserID, user.UserName.ToLower(), user.Mail.ToLower()))
+                {
+                    return new UserRegStatus { Success = false, ErrMsg = "Please use different username or email" };
+                }
+                PubFunc pubFunc = new();
+                var returnHash = pubFunc.HashPassword(user.Password);
+                var userUpdate = cdnCtxt.Users.Where(u => u.UserId == user.UserID).FirstOrDefault();
+                userUpdate.Username = user.UserName;
+                userUpdate.Password = returnHash.HashedPassword;
+                userUpdate.Salt = returnHash.Salt;
+                userUpdate.Mail = user.Mail;
+                userUpdate.PhoneNo = user.PhoneNo;
+                //Reset Skills, Hobbies
+                var SkillRemove = cdnCtxt.Skills.Where(u => u.UserId == user.UserID).ToList();
+                cdnCtxt.Skills.RemoveRange(SkillRemove);
+                var hobbyRemove = cdnCtxt.Hobbies.Where(u => u.UserId == user.UserID).ToList();
+                cdnCtxt.Hobbies.RemoveRange(hobbyRemove);
 
-            var Skills = new List<ModelCDN.Skill>();
-            user.SkillsList.ForEach(skill =>
-            {
-                Skills.Add(new ModelCDN.Skill { UserId = user.UserID, SkillName = skill.SkillName, SkillRating = skill.SkillRatings });
-            });
-            cdnCtxt.Skills.AddRange(Skills);
-            var hobbies = new List<ModelCDN.Hobby>();
-            user.HobbiesList.ForEach(hobby =>
-            {
-                hobbies.Add(new Hobby { UserId = user.UserID, HobbyName = hobby.HobbyName });
-            });
-            cdnCtxt.Hobbies.AddRange(hobbies);
-            cdnCtxt.SaveChanges();
-            return new UserRegStatus { Success = true };
+                var Skills = new List<ModelCDN.Skill>();
+                user.SkillsList.ForEach(skill =>
+                {
+                    Skills.Add(new ModelCDN.Skill { UserId = user.UserID, SkillName = skill.SkillName, SkillRating = skill.SkillRatings });
+                });
+                cdnCtxt.Skills.AddRange(Skills);
+                var hobbies = new List<ModelCDN.Hobby>();
+                user.HobbiesList.ForEach(hobby =>
+                {
+                    hobbies.Add(new Hobby { UserId = user.UserID, HobbyName = hobby.HobbyName });
+                });
+                cdnCtxt.Hobbies.AddRange(hobbies);
+                cdnCtxt.SaveChanges();
+                return new UserRegStatus { Success = true };
+            }
         }
 
         public class User
@@ -463,11 +488,12 @@ namespace HafizDemoAPI.Controllers
 /// <returns></returns>
         internal bool CheckUserExistByUsernameEmail(string? Username, string? Mail)
         {
-
-            var User = cdnCtxt.Users.AsNoTracking().Where(user => user.Username == Username || user.Mail == Mail).FirstOrDefault();
-            if (User != null) { return true; }
-            return false;
-
+            using (CDNContext cdnCtxt = new())
+            {
+                var User = cdnCtxt.Users.AsNoTracking().Where(user => user.Username == Username || user.Mail == Mail).FirstOrDefault();
+                if (User != null) { return true; }
+                return false;
+            }
         }
 
         /// <summary>
@@ -479,11 +505,12 @@ namespace HafizDemoAPI.Controllers
         /// <returns></returns>
         internal bool CheckUserExistByUsernameEmail(Int32 UserId,string? Username, string? Mail)
         {
-
-            var User = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId != UserId && (user.Username == Username || user.Mail == Mail)).FirstOrDefault();
-            if (User != null) { return true; }
-            return false;
-
+            using (CDNContext cdnCtxt = new())
+            {
+                var User = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId != UserId && (user.Username == Username || user.Mail == Mail)).FirstOrDefault();
+                if (User != null) { return true; }
+                return false;
+            }
         }
 
     }
