@@ -157,34 +157,58 @@
 
         const userListContainer = document.getElementById('userListDyn');
         userListContainer.innerHTML = "";
+        
         // Add the header for the user list
         const userListHeader = document.createElement('h2');
         userListHeader.textContent = 'CDN User List';
         userListContainer.appendChild(userListHeader);
 
-
-
-        const userList = document.createElement('div');
-
-        // Loop through other users and display their information
+        const listUser = document.getElementById('listUser');
+        listUser.innerHTML = "";
         userData.forEach(user => {
             console.log(user);
-            const userCard = document.createElement('div');
-            userCard.className = 'card mb-3';
-            userCard.innerHTML = `
-                <div class="card-body">
-                    <h5 class="card-title">${user.userName}</h5>
-                    <p class="card-text">Email: ${user.mail}</p>
-                    <p class="card-text">Phone: ${user.phoneNo}</p>
-                    <p class="card-text">Status: ${user.status}</p>
+            var strUser = `
+                    <li class="list-group-item">
+                    Username : ${user.userName} <br>
+                    Email: ${user.mail} <br>
+                    Phone: ${user.phoneNo} <br>
+                    Status: ${user.status} <br>
                     <button class="btn btn-primary send-chat-button" data-user-id="${user.userID}" ${user.followedStatus === 'No' || user.status !== 'Online' ? 'disabled' : ''}>Send Chat</button>
-                    <button class="btn btn-success follow-button" data-user-id="${user.userId}" data-followed-status="${user.followedStatus}">${user.followedStatus === 'Yes' ? 'Following' : 'Follow'}</button>
-                </div>
+                    <button class="btn btn-success follow-button" data-user-id="${user.userId}" data-followed-status="${user.followedStatus}">${user.followedStatus === 'Yes' ? 'Following' : 'Follow'}</button></li>
             `;
-            userList.appendChild(userCard);
+            listUser.innerHTML += strUser;
+            //listUser.appendChild(strUser);
         });
 
-        userListContainer.appendChild(userList);
+//        const userList = document.createElement('div');
+
+//        // Loop through other users and display their information
+//        userData.forEach(user => {
+//            console.log(user);
+//            const userCard = document.createElement('div');
+//            userCard.className = 'card mb-3';
+//            userCard.innerHTML = `
+//                <!--div class="card-body">
+//                    <h5 class="card-title">${user.userName}</h5>
+//                    <p class="card-text">Email: ${user.mail}</p>
+//                    <p class="card-text">Phone: ${user.phoneNo}</p>
+//                    <p class="card-text">Status: ${user.status}</p>
+//                    <button class="btn btn-primary send-chat-button" data-user-id="${user.userID}" ${user.followedStatus === 'No' || user.status !== 'Online' ? 'disabled' : ''}>Send Chat</button>
+//                    <button class="btn btn-success follow-button" data-user-id="${user.userId}" data-followed-status="${user.followedStatus}">${user.followedStatus === 'Yes' ? 'Following' : 'Follow'}</button>
+//                </div-->
+//<ul class="list-group">
+//                    <li class="list-group-item">${user.userName}</li>
+//                    <li class="list-group-item">Email: ${user.mail}</li>
+//                    <li class="list-group-item">Phone: ${user.phoneNo}</li>
+//                    <li class="list-group-item">Status: ${user.status}</li>
+//                    <li class="list-group-item"><button class="btn btn-primary send-chat-button" data-user-id="${user.userID}" ${user.followedStatus === 'No' || user.status !== 'Online' ? 'disabled' : ''}>Send Chat</button></li>
+//                    <li class="list-group-item"><button class="btn btn-success follow-button" data-user-id="${user.userId}" data-followed-status="${user.followedStatus}">${user.followedStatus === 'Yes' ? 'Following' : 'Follow'}</button></li>
+//</ul>
+//            `;
+//            userList.appendChild(userCard);
+//        });
+
+//        userListContainer.appendChild(userList);
 
 
 
@@ -392,6 +416,44 @@
     });
 
 
+    const $chatList = $('#chat-list');
+    const $messageInput = $('#message-input');
+    const $sendButton = $('#send-button');
 
+    function addMessage(message, sender) {
+        console.log(message + sender);
+        const $messageItem = $('<li class="chat-li">');
+        $messageItem.text(`${sender}: ${message}`);
+        $chatList.append($messageItem);
+        scrollToBottom();
+    }
 
+    function scrollToBottom() {
+        var scrollingDiv = document.getElementById("chat-messages");
+        scrollingDiv.scrollTop = scrollingDiv.scrollHeight;
+    }
+
+    $sendButton.click(function () {
+        const message = $messageInput.val();
+        if (message.trim() !== '') {
+            SendMessageToRoom(message);
+            $messageInput.val('');
+        }
+    });
+
+    $messageInput.keypress(function (e) {
+        if (e.which === 13) {
+            $sendButton.click();
+        }
+    });
+    connection.on("ReceiveMessageRoom", function (username, message) {
+        addMessage(message, username);
+    });
+
+    function SendMessageToRoom(message) {
+        connection.invoke("SendMessageToRoom", parseInt(userId), message).catch(function (err) {
+            console.error(err.toString());
+        });
+
+    }
 });
