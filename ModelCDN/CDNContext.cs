@@ -16,6 +16,7 @@ public partial class CDNContext : DbContext
     {
     }
 
+    public virtual DbSet<StatTable> StatTables { get; set; }
     public virtual DbSet<Hobby> Hobbies { get; set; }
 
 
@@ -30,11 +31,20 @@ public partial class CDNContext : DbContext
     //"Data Source=tcp:shas.database.windows.net,1433;Initial Catalog=dbdemo;Persist Security Info=False;User ID=demo;Password=P@ssw0rd;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=true;Connection Timeout=30;"
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-       //=> optionsBuilder.UseSqlServer("Data Source=CNKZ463-DELL\\SQLEXPRESS;Initial Catalog=dbdemo;User ID=demo;Password=P@ssw0rd;TrustServerCertificate=true");
-          => optionsBuilder.UseSqlServer("Data Source=tcp:shas.database.windows.net,1433;Initial Catalog=dbdemo;Persist Security Info=False;User ID=demo;Password=P@ssw0rd;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=true;Connection Timeout=30;");
+       => optionsBuilder.UseSqlServer("Data Source=CNKZ463-DELL\\SQLEXPRESS;Initial Catalog=dbdemo;User ID=demo;Password=P@ssw0rd;TrustServerCertificate=true");
+         // => optionsBuilder.UseSqlServer("Data Source=tcp:shas.database.windows.net,1433;Initial Catalog=dbdemo;Persist Security Info=False;User ID=demo;Password=P@ssw0rd;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=true;Connection Timeout=30;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<StatTable>(entity =>
+        {
+            entity.ToTable("StatTable");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.StatGroup).HasMaxLength(50);
+            entity.Property(e => e.StatName).HasMaxLength(50);
+        });
+
         modelBuilder.Entity<Hobby>(entity =>
         {
             entity.Property(e => e.HobbyId).HasColumnName("HobbyID");

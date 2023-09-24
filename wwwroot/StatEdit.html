@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistic Page -Edit</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <ul class="ul-menu">
+        <li class="li-menu" style="float:right">
+        <li class="li-menu"><a class="active" href="dashboard.html">Dashboard</a></li>
+        <li class="li-menu"><a href="stat.html">Stat</a></li>
+        <li class="li-menu" style="float:right">
+
+            <a class="logout-button" href="#">Logout</a>
+        </li>
+    </ul>
+    <div class="container mt-5">
+        <h1>Update Data</h1>
+        <form id="filterForm">
+            <div class="form-group">
+                <label>
+                    <input type="radio" name="filter" value="state" checked> State
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="radio" name="filter" value="age"> Age Group
+                </label>
+            </div>
+            <button type="button" class="btn btn-primary" id='cmdFilter'>Apply Filter</button>
+        </form>
+        <form id="updateForm">
+
+            <div class="form-group">
+                <label for="field1" id="id1" style="display : none"></label>
+                <label for="field1" id="field1Name1">Field 1:</label>
+                <input type="text" class="form-control" id="field1" name="field1">
+            </div>
+            <div class="form-group">
+                <label for="field1" id="id2" style="display : none"></label>
+                <label for="field2" id="field1Name2">Field 2:</label>
+                <input type="text" class="form-control" id="field2" name="field2">
+            </div>
+            <div class="form-group">
+                <label for="field1" id="id3" style="display : none"></label>
+                <label for="field3" id="field1Name3">Field 3:</label>
+                <input type="text" class="form-control" id="field3" name="field3">
+            </div>
+            <div class="form-group">
+                <label for="field1" id="id4" style="display : none"></label>
+                <label for="field4" id="field1Name4">Field 4:</label>
+                <input type="text" class="form-control" id="field4" name="field4">
+            </div>
+            <div class="form-group">
+                <label for="field1" id="id5" style="display : none"></label>
+                <label for="field5" id="field1Name5">Field 5:</label>
+                <input type="text" class="form-control" id="field5" name="field5">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+    <script>
+        $(document).ready(function () {
+            var currDomain = window.location.origin;
+            const token = sessionStorage.getItem('token');
+            const userId = sessionStorage.getItem('userId');
+            // Set the number of items per page
+
+
+            //if (!token) {
+            //    //redirect unauthorized user to the login page
+            //    window.location.href = 'login.html';
+            //}
+
+            const headers = new Headers({
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            });
+
+            $("#cmdFilter").click(function () {
+                var selectedFilter = $("input[name='filter']:checked").val();
+                fetchData(selectedFilter);
+            });
+
+
+            function fetchData(filter) {
+                fetch(`${currDomain}/api/Stat/GetStatValByGroup?statGroup=${filter}`,
+                    {
+                        method: 'GET',
+                        headers: headers
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+
+                        $("#id1").html(data[0].id);
+                        $("#id2").html(data[1].id);
+                        $("#id3").html(data[2].id);
+                        $("#id4").html(data[3].id);
+                        $("#id5").html(data[4].id);
+
+                        $("#field1Name1").html(data[0].name);
+                        $("#field1Name2").html(data[1].name);
+                        $("#field1Name3").html(data[2].name);
+                        $("#field1Name4").html(data[3].name);
+                        $("#field1Name5").html(data[4].name);
+
+                        $("#field1").val(data[0].value);
+                        $("#field2").val(data[1].value);
+                        $("#field3").val(data[2].value);
+                        $("#field4").val(data[3].value);
+                        $("#field5").val(data[4].value);
+                    })
+                    .catch(error => {
+                        console.error("Error fetching data from API:", error);
+                    });
+            }
+
+
+            fetchData($("input[name='filter']:checked").val());
+
+
+            $("#updateForm").submit(function (event) {
+                event.preventDefault();
+                var data = [
+                    { id: parseInt($("#id1").html()), value: $("#field1").val() },
+                    { id: parseInt($("#id2").html()), value: $("#field2").val() },
+                    { id: parseInt($("#id3").html()), value: $("#field3").val() },
+                    { id: parseInt($("#id4").html()), value: $("#field4").val() },
+                    { id: parseInt($("#id5").html()), value: $("#field5").val() }
+                ];
+                var str = JSON.stringify(data);
+                console.log(str);
+
+                fetch(`${currDomain}/api/Stat/UpdateStatValue?group=${$("input[name='filter']:checked").val()}`, {
+                    method: "POST",
+                    headers: headers,
+                    body: str
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.returnMsg);
+                        console.log("Data updated successfully:", data);
+                    })
+                    .catch(error => {
+                        console.error("Error updating data:", error);
+                    });
+            });
+
+            $('.logout-button').on('click', function () {
+
+                const apiUrl = `${currDomain}/api/User/LogOut?UserID=${userId}&ConnID=${ConnID}`;
+
+                return fetch(apiUrl, {
+                    method: 'GET',
+                    headers: headers,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        sessionStorage.removeItem('token');
+                        window.location.href = '/login.html';
+                    })
+                    .catch(error => console.error('Error fetching registration data:', error));
+            });
+
+        });
+    </script>
+</body>
+</html>

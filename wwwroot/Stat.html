@@ -1,0 +1,259 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistic Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <ul class="ul-menu">
+        <li class="li-menu" style="float:right">
+        <li class="li-menu"><a class="active" href="dashboard.html">Dashboard</a></li>
+        <li class="li-menu"><a href="statedit.html">Stat Edit</a></li>
+        <li class="li-menu" style="float:right">
+
+            <a class="logout-button" href="#">Logout</a>
+        </li>
+    </ul>
+    <div class="container-fluid" style="background-color: whitesmoke;">
+        <div class="row">
+            <div class="col-md-3" style="background-color: white; color: black; height: 100vh;">
+                <!-- Left Div -->
+                <h3>Filters</h3>
+                <form id="filterForm">
+                    <div class="form-group">
+                        <label>
+                            <input type="radio" name="filter" value="state" checked> State
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="radio" name="filter" value="age"> Age Group
+                        </label>
+                    </div>
+                    <button type="button" class="btn btn-primary" id='cmdFilter'>Apply Filter</button>
+                </form>
+            </div>
+            <div class="col-md-9" style="background-color: white color: black;">
+
+                
+                <h1>Welcome User <label id='username'></label></h1>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Pie Chart</h5>
+                                <canvas id="pieChart" width="200" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Bar Chart</h5>
+                                <canvas id="barChart" width="200" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Line Chart</h5>
+                                <canvas id="lineChart" width="200" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-3">
+
+                        <h5>Tabular Data</h5>
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabularData">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+    <script>
+        $(document).ready(function () {
+            var currDomain = window.location.origin;
+            const token = sessionStorage.getItem('token');
+            const userId = sessionStorage.getItem('userId');
+            const username = sessionStorage.getItem('username');
+            $("#username").html(username);
+            // Set the number of items per page
+
+
+            //if (!token) {
+            //    //redirect unauthorized user to the login page
+            //    window.location.href = 'login.html';
+            //}
+
+            const headers = new Headers({
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            });
+            // Initialize pie chart
+            var pieChart = new Chart(document.getElementById("pieChart"), {
+                type: "pie",
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: []
+                    }]
+                }
+            });
+
+            // Initialize bar chart
+            var barChart = new Chart(document.getElementById("barChart"), {
+                type: "bar",
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [],
+                        label: 'Statistik'
+                    }]
+                }
+            });
+
+            // Initialize line chart
+            var lineChart = new Chart(document.getElementById("lineChart"), {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        borderColor: [],
+                        fill: false,
+                        label: 'Statistik'
+                    }]
+                }
+            });
+
+            var sampleData = [];
+            fetchData($("input[name='filter']:checked").val());
+            function fetchData(filter) {
+                const apiUrl = `http://localhost:5083/api/Stat/GetStatByGroup?statGroup=${filter}`;
+                fetch(apiUrl, {
+                    method: 'GET',
+                    headers: headers
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.length > 0) {
+                            //reatePaging();
+                            sampleData = data;
+                            //console.log(sampleData);
+                            updateChart();
+                            updateTabularData();
+                        }
+                    })
+                    .catch(error => console.error('Error fetching registration data:', error));
+            }
+            // Function to update tabular data
+            function updateTabularData() {
+                var data = sampleData;
+                var tabularDataHtml = "";
+                data.forEach(function (item) {
+                    tabularDataHtml += `<tr><td>${item.name}</td><td>${item.value}%</td></tr>`;
+                });
+                $("#tabularData").html(tabularDataHtml);
+            }
+
+
+            //updateChart('state');
+            //updateTabularData('state');
+
+            // Function to update chart data and labels
+            function updateChart() {
+                var data = sampleData;
+                console.log(data);
+                var labels = [];
+                var values = [];
+                var colors = ["#FF5733", "#33FF57", "#5733FF", "Yellow", "Purple"];
+                data.forEach(function (item) {
+                    labels.push(item.name);
+                    values.push(item.value);
+
+                });
+                pieChart.data.labels = labels;
+                pieChart.data.datasets[0].data = values;
+                pieChart.data.datasets[0].backgroundColor = colors;
+                pieChart.update();
+
+                barChart.data.labels = labels;
+                barChart.data.datasets[0].data = values;
+                barChart.data.datasets[0].backgroundColor = colors;
+                barChart.data.label = 'Statistik';
+                barChart.update();
+
+                lineChart.data.labels = labels;
+                lineChart.data.datasets[0].data = values;
+                lineChart.data.datasets[0].borderColor = colors;
+                lineChart.update();
+            }
+
+
+            $("#cmdFilter").click(function () {
+                var selectedFilter = $("input[name='filter']:checked").val();
+                fetchData(selectedFilter);
+            });
+
+            var ConnID = "";
+            const connection = new signalR.HubConnectionBuilder()
+
+                .withUrl(`${currDomain}/chat-hub`)
+
+                .build();
+
+            connection.start().then(function () {
+                console.log("Connected to the hub.");
+            }).catch(function (err) {
+                console.error(err.toString());
+            });
+
+            connection.on("NotifyStatUpdate", function (Group) {
+                console.log(`Server notify stat updated ${Group}`);
+                $("input[name=filter][value=" + Group + "]").prop('checked', true);
+                fetchData(Group);
+            });
+
+            $('.logout-button').on('click', function () {
+
+                const apiUrl = `${currDomain}/api/User/LogOut?UserID=${userId}&ConnID=${ConnID}`;
+
+                return fetch(apiUrl, {
+                    method: 'GET',
+                    headers: headers,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        sessionStorage.removeItem('token');
+                        window.location.href = '/login.html';
+                    })
+                    .catch(error => console.error('Error fetching registration data:', error));
+            });
+
+        });
+
+
+    </script>
+</body>
+</html>

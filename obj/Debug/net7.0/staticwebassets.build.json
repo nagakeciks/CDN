@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "VVoV/ad2JPocSlMhQyokACzlJDkhejkZSwVu25KpXfU=",
+  "Hash": "eg2KF1GWV7lwCICrGpz1tRuhjh3Oy3AncxOp04lTOgw=",
   "Source": "HafizDemoAPI",
   "BasePath": "_content/HafizDemoAPI",
   "Mode": "Default",
@@ -185,6 +185,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\site.webmanifest"
+    },
+    {
+      "Identity": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\Stat.html",
+      "SourceId": "HafizDemoAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\",
+      "BasePath": "_content/HafizDemoAPI",
+      "RelativePath": "Stat.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Stat.html"
+    },
+    {
+      "Identity": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\StatEdit.html",
+      "SourceId": "HafizDemoAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\",
+      "BasePath": "_content/HafizDemoAPI",
+      "RelativePath": "StatEdit.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\StatEdit.html"
     },
     {
       "Identity": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\style.css",

@@ -25,6 +25,7 @@ namespace HafizDemoAPI.Controllers
 
         public class LoginData
         {
+            public string Username { get; set; }
             public string UserID { get; set; }
             public string Token { get; set; }
         }
@@ -60,7 +61,7 @@ namespace HafizDemoAPI.Controllers
                     // Generate JWT token
                     var token = GenerateJwtToken(user.UserId, user.Username);
 
-                    return Ok(new LoginData { UserID = user.UserId.ToString(), Token = token });
+                    return Ok(new LoginData { Username = user.Username, UserID = user.UserId.ToString(), Token = token });
                 }
                 else
                 {

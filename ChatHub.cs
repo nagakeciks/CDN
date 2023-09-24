@@ -35,7 +35,10 @@ namespace HafizDemoAPI
             return base.OnDisconnectedAsync(exception);
         }
 
-
+        public async Task StatUpdate(string Group)
+        {
+            await Clients.All.NotifyStatUpdate(Group);
+        }
         public async Task SendMessage(string Message)
         {
             await Clients.All.ReceiveMessage(Message);

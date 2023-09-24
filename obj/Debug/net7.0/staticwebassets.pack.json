@@ -17,6 +17,14 @@
       "PackagePath": "staticwebassets\\Script.js"
     },
     {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\Stat.html",
+      "PackagePath": "staticwebassets\\Stat.html"
+    },
+    {
+      "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\StatEdit.html",
+      "PackagePath": "staticwebassets\\StatEdit.html"
+    },
+    {
       "Id": "D:\\Kerja\\MyCodes\\OpenAPI\\TestAPI\\wwwroot\\UserDelete.html",
       "PackagePath": "staticwebassets\\UserDelete.html"
     },

@@ -10,74 +10,82 @@ namespace HafizDemoAPI.Controllers
     [ApiController]
     public class SimpleUserController : ControllerBase
     {
-        static CDNContext cdnCtxt = new();
-
-        public SimpleUserController()
-        {
-            cdnCtxt = new CDNContext();
-        }
 
         [HttpGet]
         public IActionResult GetUsers()
         {
-            var users = cdnCtxt.Simpleuser.ToList();
-            return Ok(users);
+            using (CDNContext cdnCtxt = new())
+            {
+                var users = cdnCtxt.Simpleuser.ToList();
+                return Ok(users);
+            }
         }
 
         [HttpGet("{id}")]
         public IActionResult GetUserById(int id)
         {
-            // Find a SimpleUser by ID or return a 404 if not found
-            var user = cdnCtxt.Simpleuser.Where(u => u.Id == id).FirstOrDefault();
-            if (user == null)
+            using (CDNContext cdnCtxt = new())
             {
-                return NotFound();
+                var user = cdnCtxt.Simpleuser.Where(u => u.Id == id).FirstOrDefault();
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                return Ok(user);
             }
-            return Ok(user);
         }
 
         [HttpPost]
         public IActionResult CreateUser([FromBody] SimpleUser newUser)
         {
-            var user = new ModelCDN.Simpleuser
+            using (CDNContext cdnCtxt = new())
             {
-                Username= newUser.Username,
-                Mail = newUser.mail,
-                Phoneno = newUser.phoneno,
-                Skills = newUser.skills,
-                Hobbies= newUser.hobbies
-            };
-            cdnCtxt.Simpleuser.Add(user);
-            cdnCtxt.SaveChanges();
-            return Ok(user);
+                var user = new ModelCDN.Simpleuser
+                {
+                    Username = newUser.Username,
+                    Mail = newUser.mail,
+                    Phoneno = newUser.phoneno,
+                    Skills = newUser.skills,
+                    Hobbies = newUser.hobbies
+                };
+                cdnCtxt.Simpleuser.Add(user);
+                cdnCtxt.SaveChanges();
+                return Ok(user);
+            }
         }
 
         [HttpPut("{id}")]
         public IActionResult UpdateUser(int id, [FromBody] SimpleUser updatedUser)
         {
-            var recordUpdated = cdnCtxt.Simpleuser.Where(u => u.Id == id).ExecuteUpdate(setters => setters
+            using (CDNContext cdnCtxt = new())
+            {
+                var recordUpdated = cdnCtxt.Simpleuser.Where(u => u.Id == id).ExecuteUpdate(setters => setters
                 .SetProperty(b => b.Username, updatedUser.Username)
                 .SetProperty(b => b.Mail, updatedUser.mail)
                 .SetProperty(b => b.Phoneno, updatedUser.phoneno)
                 .SetProperty(b => b.Skills, updatedUser.skills)
                 .SetProperty(b => b.Hobbies, updatedUser.hobbies)
                 );
-            if (recordUpdated > 0)
-            {
-                return Ok(recordUpdated);
+                if (recordUpdated > 0)
+                {
+                    return Ok(recordUpdated);
+                }
+                return NoContent();
             }
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteUser(int id)
         {
-            var recordDeleted = cdnCtxt.Simpleuser.Where(u => u.Id == id).ExecuteDelete();
-            if (recordDeleted > 0)
+            using (CDNContext cdnCtxt = new())
             {
-                return Ok(recordDeleted);
+                var recordDeleted = cdnCtxt.Simpleuser.Where(u => u.Id == id).ExecuteDelete();
+                if (recordDeleted > 0)
+                {
+                    return Ok(recordDeleted);
+                }
+                return NoContent();
             }
-            return NoContent();
         }
 
         public class SimpleUser

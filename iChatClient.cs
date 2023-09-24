@@ -10,5 +10,7 @@
         Task ReceiveMessageFromID(string From,string message);
 
         Task ReturnID(string ID);
+
+        Task NotifyStatUpdate(string Group);
     }
 }
