@@ -149,7 +149,7 @@
             var sampleData = [];
             fetchData($("input[name='filter']:checked").val());
             function fetchData(filter) {
-                const apiUrl = `http://localhost:5083/api/Stat/GetStatByGroup?statGroup=${filter}`;
+                const apiUrl = `${currDomain}/api/Stat/GetStatByGroup?statGroup=${filter}`;
                 fetch(apiUrl, {
                     method: 'GET',
                     headers: headers
