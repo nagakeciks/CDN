@@ -299,8 +299,8 @@ namespace HafizDemoAPI.Controllers
                 {
                     return new UserRegStatus { Success = false, ErrMsg = "Please use different username or email" };
                 }
-                PubFunc pubFunc = new();
-                var returnHash = pubFunc.HashPassword(user.Password);
+                //PubFunc pubFunc = new();
+                var returnHash = PubFunc.HashPassword(user.Password);
                 var User = new ModelCDN.User { Username = user.UserName.ToLower(), Password = returnHash.HashedPassword, Salt = returnHash.Salt, Mail = user.Mail.ToLower(), PhoneNo = user.PhoneNo };
                 cdnCtxt.Users.Add(User);
                 cdnCtxt.SaveChanges(); //SaveChanges here so that we can get the UserId
@@ -332,7 +332,7 @@ namespace HafizDemoAPI.Controllers
         {
             using (CDNContext cdnCtxt = new())
             {
-                PubFunc pubFunc = new();
+                //PubFunc pubFunc = new();
                 var user = cdnCtxt.Users.AsNoTracking().Where(u => u.UserId == UserToDelete.UserID).FirstOrDefault();
 
                 if (user == null)
@@ -343,7 +343,7 @@ namespace HafizDemoAPI.Controllers
                 {
                     return new rtnDeleteUser { Success = false, ErrorMsg = "Invalid username" };
                 }
-                if (!pubFunc.VerifyPassword(UserToDelete.Password, user.Password, Convert.FromBase64String(user.Salt)))
+                if (!PubFunc.VerifyPassword(UserToDelete.Password, user.Password, Convert.FromBase64String(user.Salt)))
                 {
                     return new rtnDeleteUser { Success = false, ErrorMsg = "Invalid password" };
                 }
@@ -370,8 +370,8 @@ namespace HafizDemoAPI.Controllers
                 {
                     return new UserRegStatus { Success = false, ErrMsg = "Please use different username or email" };
                 }
-                PubFunc pubFunc = new();
-                var returnHash = pubFunc.HashPassword(user.Password);
+                //PubFunc pubFunc = new();
+                var returnHash = PubFunc.HashPassword(user.Password);
                 var userUpdate = cdnCtxt.Users.Where(u => u.UserId == user.UserID).FirstOrDefault();
                 userUpdate.Username = user.UserName;
                 userUpdate.Password = returnHash.HashedPassword;

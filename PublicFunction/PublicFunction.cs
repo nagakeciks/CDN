@@ -2,9 +2,9 @@
 using System.Security.Cryptography;
 namespace HafizDemoAPI
 {
-    public class PubFunc
+    public static class PubFunc
     {
-        public PubFunc() { }
+        //public PubFunc() { }
         static HashAlgorithmName hashAlgorithm =  HashAlgorithmName.SHA256;
         static int keySize = 64;
         static int iterations = 350000;
@@ -13,7 +13,7 @@ namespace HafizDemoAPI
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        public ReturnHash HashPassword(string password)
+        public static ReturnHash HashPassword(string password)
         {
             // Generate a 128-bit salt using a sequence of
             // cryptographically strong random bytes.
@@ -31,7 +31,7 @@ namespace HafizDemoAPI
             return new ReturnHash { HashedPassword= hashed,Salt = Convert.ToBase64String(salt) };
         }
 
-        public bool VerifyPassword(string password, string hash, byte[] salt)
+        public static bool VerifyPassword(string password, string hash, byte[] salt)
         {
             var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, hashAlgorithm, keySize);
             return CryptographicOperations.FixedTimeEquals(hashToCompare, Convert.FromBase64String(hash));

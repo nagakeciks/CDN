@@ -47,7 +47,7 @@ namespace HafizDemoAPI.Controllers
         {
             try
             {
-                PubFunc pubFunc = new();
+                //PubFunc pubFunc = new();
                 CDNContext cdn = new();
                 var user = cdn.Users.Where(u => u.Username == model.Username).FirstOrDefault();
 
@@ -55,7 +55,7 @@ namespace HafizDemoAPI.Controllers
                 {
                     return Unauthorized(new { message = "Invalid username" });
                 }
-                var boolValid = pubFunc.VerifyPassword(model.Password, user.Password, Convert.FromBase64String(user.Salt));
+                var boolValid = PubFunc.VerifyPassword(model.Password, user.Password, Convert.FromBase64String(user.Salt));
                 if (boolValid)
                 {
                     // Generate JWT token

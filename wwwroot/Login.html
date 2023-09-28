@@ -28,12 +28,25 @@
                             <button type="submit" class="btn btn-primary btn-block">Login</button>
                         </form>
                     </div>
-                    <p>Don't have an account? <a href="userRegister.html">Sign Up to CDN</a></p>
+                    <p style="text-align:center">Don't have an account? <a href="userRegister.html">Sign Up to CDN</a></p>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Bootstrap Spinner Modal -->
+    <div class="modal fade" id="loadingModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <span>Please wait</span>
+                    <div class="spinner-border text-primary" role="status">
 
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
@@ -44,7 +57,9 @@
 
         loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
-
+            $('#loadingModal').modal('show');
+            console.log('Authenticating..');
+            
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
@@ -65,16 +80,29 @@
                         sessionStorage.setItem('token', data.token);
                         sessionStorage.setItem('userId', data.userID);
                         sessionStorage.setItem('username', data.username);
+                        $('#loadingModal').modal('hide');
                         // Redirect to another page or perform other actions
                         window.location.href = 'dashboard.html';
                     } else {
-                        alert('Authentication failed. Please check your credentials.');
+                        console.log('fail');
+                        
+                        setTimeout(function () {
+                            alert('Authentication failed. Please check your credentials.');
+                            $('#loadingModal').modal('hide');
+                        //window.location.href = 'login.html';
+                        }, 2000)
+                        
                     }
                 })
                 .catch(error => {
-                    console.error('Login error:', error);
-                    alert('An error occurred during login. Please try again later.');
+                    setTimeout(function () {
+                        alert('Authentication failed. Please check your credentials.');
+                        $('#loadingModal').modal('hide');
+                        console.error('Login error:', error);
+                        alert('An error occurred during login. Please try again later.');
+                    }, 2000)
                 });
+            $('#loadingModal').modal('hide');
         });
     </script>
 </body>
