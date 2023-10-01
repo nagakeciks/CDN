@@ -28,6 +28,13 @@ namespace HafizDemoAPI.Controllers
             public string Username { get; set; }
             public string UserID { get; set; }
             public string Token { get; set; }
+       
+        }
+
+        public class Err
+        {
+            public bool HasError { get; set; }
+            public string Error { get; set; }
         }
 
         public class RegisterModel
@@ -70,7 +77,8 @@ namespace HafizDemoAPI.Controllers
             }
             catch(Exception ex) {
 
-                return Ok(ex.Message);
+                return BadRequest(new Err { HasError = true , Error = ex.Message});
+                //return Ok(ex.Message);
             }
 
         }

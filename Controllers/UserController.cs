@@ -248,7 +248,7 @@ namespace HafizDemoAPI.Controllers
                 UserPaging userPaging = new();
                 var listUser = new List<User>();
                 var userCount = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId != UserID).Count();
-                double dMax = (double)userCount / (double)PageSize;
+                double dMax = (double)userCount / (double)PageSize; // need to convert to double, for a case usercound 9 / pagesize 2 = 4.5 , should round up
                 userPaging.MaxSize = Convert.ToInt32(Math.Ceiling(dMax));
                 var Users = cdnCtxt.Users.AsNoTracking().Where(user => user.UserId != UserID).Skip(PageSize * (PageNum - 1)).Take(PageSize).ToList();
 
