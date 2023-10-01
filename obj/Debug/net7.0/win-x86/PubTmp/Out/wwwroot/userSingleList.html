@@ -14,20 +14,20 @@
     <header>
         <h1>Complete Developer Network</h1>
     </header>
-    <ul>
-        <li><a href="dashboard.html">Dashboard</a></li>
-        <li><a href="userSingle.html">Simple CDN Registration</a></li>
-        <li><a class="active" href="userSinglelist.html">Simple CDN List</a></li>
+    <ul class="ul-menu">
+        <li class="li-menu"><a href="dashboard.html">Dashboard</a></li>
+        <li class="li-menu"><a href="userSingle.html">Simple CDN Registration</a></li>
+        <li class="li-menu"><a class="active" href="userSinglelist.html">Simple CDN List</a></li>
     </ul>
     <h1>CDN User List</h1>
 
     <div id="userList">
 
     </div>
-
+    <script src="Script.js"></script>
     <script>
         var currDomain = window.location.origin;
-        const token = sessionStorage.getItem('token');
+        //const token = sessionStorage.getItem('token');
         fetchUserList();
         function fetchUserList() {
 
@@ -36,15 +36,14 @@
                 headers: {
                     'Content-Type': 'application/json',
                 }
-                })
+            })
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
                     if (data.length > 0) {
-                        generateUserList(data)      
+                        generateUserList(data)
                     }
-                    else
-                    {
+                    else {
                     }
                 })
                 .catch(error => {
@@ -58,13 +57,13 @@
             userData.forEach(user => {
                 const listItem = document.createElement('div');
                 listItem.innerHTML = `<div class="card-body">
-                                <p class="card-text"><strong>ID:</strong> ${user.id},
-                                <strong>Username:</strong> ${user.username},
-                                <strong>Email:</strong> ${user.mail},
-                                <a href="usersingleedit.html?id=${user.id}">Edit</a>
-                                <a href="usersingleview.html?id=${user.id}">View</a>
-                                <a href="#" onClick='DeleteUser(${user.id})'">Delete</a></p>
-                                </div>`;
+                                    <p class="card-text"><strong>ID:</strong> ${user.id},
+                                    <strong>Username:</strong> ${user.username},
+                                    <strong>Email:</strong> ${user.mail},
+                                    <a href="usersingleedit.html?id=${user.id}">Edit</a>
+                                    <a href="usersingleview.html?id=${user.id}">View</a>
+                                    <a href="#" onClick='DeleteUser(${user.id})'">Delete</a></p>
+                                    </div>`;
                 userList.appendChild(listItem);
             });
         }
@@ -83,8 +82,7 @@
                         alert(`User ${id} deleted`);
                         fetchUserList();
                     }
-                    else
-                    {
+                    else {
                     }
                 })
                 .catch(error => {

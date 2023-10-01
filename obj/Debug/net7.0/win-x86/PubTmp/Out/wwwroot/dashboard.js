@@ -3,6 +3,12 @@
     var currDomain = window.location.origin;
     const token = sessionStorage.getItem('token');
     const userId = sessionStorage.getItem('userId');
+    // Set the number of items per page
+    var itemsPerPage = 2;
+    var currentPage = 1;
+    var maxPage = 10;
+
+
 
     if (!token) {
         //redirect unauthorized user to the login page
@@ -15,11 +21,22 @@
     });
    
     getProfile();
-    getUserList();
+    //getUserListPaging();
 
     $('.logout-button').on('click', function () {
-        sessionStorage.removeItem('token');
-        window.location.href = '/login.html'; 
+
+        const apiUrl = `${currDomain}/api/User/LogOut?UserID=${userId}&ConnID=${ConnID}`;
+
+        return fetch(apiUrl, {
+            method: 'GET',
+            headers: headers,
+        })
+            .then(response => response.json())
+            .then(data => {
+                    sessionStorage.removeItem('token');
+                    window.location.href = '/login.html'; 
+            })
+            .catch(error => console.error('Error fetching registration data:', error));
     });
 
 
@@ -33,11 +50,39 @@
             .then(response => response.json())
             .then(data => {
                 if (data.length > 0) {
+                    //reatePaging();
                     populateUserList(data);
                 }
             })
             .catch(error => console.error('Error fetching registration data:', error));
     }
+
+    function getUserListPaging() {
+        const apiUrl = `${currDomain}/api/User/GetUserListPaging?UserID=${userId}&PageSize=${itemsPerPage}&PageNum=${currentPage}`;
+
+        return fetch(apiUrl, {
+            method: 'GET',
+            headers: headers,
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.maxSize > 0) {
+                    //CreatePaging();
+                    maxPage = data.maxSize;
+                    populateUserList(data.userList);
+                }
+            })
+            .catch(error => console.error('Error fetching registration data:', error));
+    }
+
+    // Function to display items for the current page
+    function displayItems() {
+        document.getElementById('pageNum').innerHTML = currentPage;
+    }
+
+    // Initial display
+    displayItems();
 
     function getProfile() {
         const apiUrl = `${currDomain}/api/User/GetProfile?UserID=${userId}`;
@@ -62,36 +107,108 @@
             .catch(error => console.error('Error fetching profile:', error));
     }
 
+    $('.next-button').on('click', function () {
+
+        if (currentPage < maxPage) {
+            currentPage++;
+            getUserListPaging();
+            displayItems();
+        }
+        if (currentPage == maxPage) {return; }
+    });
+
+    $('.previous-button').on('click', function () {
+        if (currentPage == 1) { return; }
+        if (currentPage > 1) {
+            currentPage--;
+            getUserListPaging();
+            displayItems();
+        }
+        if (currentPage < maxPage) { $('.next-button').css("display", "inline"); }
+        
+    });
+
+    //function CreatePaging() {
+    //    const userListContainer = document.getElementById('userListPage');
+    //    const Paging = document.createElement('div');
+    //    /*        Paging.id = "Pagination";*/
+    //    userListContainer.innerHTML = '';
+    //    Paging.innerHTML = `
+    //        <button class="btn btn-link previous-button">Previous</button>
+    //        <label for='pagenumber'>Page Number : </label> <span id='pageNum'>1</span>
+    //        <button class="btn btn-link next-button">Next</button>`;
+    //    userListContainer.appendChild(Paging);
+
+    //    $('.next-button').on('click', function () {
+    //        if (currentPage < maxPage) {
+    //            currentPage++;
+    //            displayItems();
+    //        }
+    //    });
+
+    //    $('.previous-button').on('click', function () {
+    //        if (currentPage > 1) {
+    //            currentPage--;
+    //            displayItems();
+    //        }
+    //    });
+    //}
     function populateUserList(userData) {
 
-        const userListContainer = document.getElementById('userListContainer');
+        const userListContainer = document.getElementById('userListDyn');
         userListContainer.innerHTML = "";
+        
         // Add the header for the user list
         const userListHeader = document.createElement('h2');
         userListHeader.textContent = 'CDN User List';
         userListContainer.appendChild(userListHeader);
 
-        const userList = document.createElement('div');
-
-        // Loop through other users and display their information
+        const listUser = document.getElementById('listUser');
+        listUser.innerHTML = "";
         userData.forEach(user => {
             console.log(user);
-            const userCard = document.createElement('div');
-            userCard.className = 'card mb-3';
-            userCard.innerHTML = `
-                <div class="card-body">
-                    <h5 class="card-title">${user.userName}</h5>
-                    <p class="card-text">Email: ${user.mail}</p>
-                    <p class="card-text">Phone: ${user.phoneNo}</p>
-                    <p class="card-text">Status: ${user.status}</p>
+            var strUser = `
+                    <li class="list-group-item">
+                    Username : ${user.userName} <br>
+                    Email: ${user.mail} <br>
+                    Phone: ${user.phoneNo} <br>
+                    Status: ${user.status} <br>
                     <button class="btn btn-primary send-chat-button" data-user-id="${user.userID}" ${user.followedStatus === 'No' || user.status !== 'Online' ? 'disabled' : ''}>Send Chat</button>
-                    <button class="btn btn-success follow-button" data-user-id="${user.userId}" data-followed-status="${user.followedStatus}">${user.followedStatus === 'Yes' ? 'Following' : 'Follow'}</button>
-                </div>
+                    <button class="btn btn-success follow-button" data-user-id="${user.userId}" data-followed-status="${user.followedStatus}">${user.followedStatus === 'Yes' ? 'Following' : 'Follow'}</button></li>
             `;
-            userList.appendChild(userCard);
+            listUser.innerHTML += strUser;
+            //listUser.appendChild(strUser);
         });
 
-        userListContainer.appendChild(userList);
+//        const userList = document.createElement('div');
+
+//        // Loop through other users and display their information
+//        userData.forEach(user => {
+//            console.log(user);
+//            const userCard = document.createElement('div');
+//            userCard.className = 'card mb-3';
+//            userCard.innerHTML = `
+//                <!--div class="card-body">
+//                    <h5 class="card-title">${user.userName}</h5>
+//                    <p class="card-text">Email: ${user.mail}</p>
+//                    <p class="card-text">Phone: ${user.phoneNo}</p>
+//                    <p class="card-text">Status: ${user.status}</p>
+//                    <button class="btn btn-primary send-chat-button" data-user-id="${user.userID}" ${user.followedStatus === 'No' || user.status !== 'Online' ? 'disabled' : ''}>Send Chat</button>
+//                    <button class="btn btn-success follow-button" data-user-id="${user.userId}" data-followed-status="${user.followedStatus}">${user.followedStatus === 'Yes' ? 'Following' : 'Follow'}</button>
+//                </div-->
+//<ul class="list-group">
+//                    <li class="list-group-item">${user.userName}</li>
+//                    <li class="list-group-item">Email: ${user.mail}</li>
+//                    <li class="list-group-item">Phone: ${user.phoneNo}</li>
+//                    <li class="list-group-item">Status: ${user.status}</li>
+//                    <li class="list-group-item"><button class="btn btn-primary send-chat-button" data-user-id="${user.userID}" ${user.followedStatus === 'No' || user.status !== 'Online' ? 'disabled' : ''}>Send Chat</button></li>
+//                    <li class="list-group-item"><button class="btn btn-success follow-button" data-user-id="${user.userId}" data-followed-status="${user.followedStatus}">${user.followedStatus === 'Yes' ? 'Following' : 'Follow'}</button></li>
+//</ul>
+//            `;
+//            userList.appendChild(userCard);
+//        });
+
+//        userListContainer.appendChild(userList);
 
 
 
@@ -284,7 +401,8 @@
 
     connection.on("RefreshUserList", function () {
         console.log("RefreshUserList");
-        getUserList();
+        //getUserList();
+        getUserListPaging();
 
     });
 
@@ -298,4 +416,44 @@
     });
 
 
+    const $chatList = $('#chat-list');
+    const $messageInput = $('#message-input');
+    const $sendButton = $('#send-button');
+
+    function addMessage(message, sender) {
+        console.log(message + sender);
+        const $messageItem = $('<li class="chat-li">');
+        $messageItem.text(`${sender}: ${message}`);
+        $chatList.append($messageItem);
+        scrollToBottom();
+    }
+
+    function scrollToBottom() {
+        var scrollingDiv = document.getElementById("chat-messages");
+        scrollingDiv.scrollTop = scrollingDiv.scrollHeight;
+    }
+
+    $sendButton.click(function () {
+        const message = $messageInput.val();
+        if (message.trim() !== '') {
+            SendMessageToRoom(message);
+            $messageInput.val('');
+        }
+    });
+
+    $messageInput.keypress(function (e) {
+        if (e.which === 13) {
+            $sendButton.click();
+        }
+    });
+    connection.on("ReceiveMessageRoom", function (username, message) {
+        addMessage(message, username);
+    });
+
+    function SendMessageToRoom(message) {
+        connection.invoke("SendMessageToRoom", parseInt(userId), message).catch(function (err) {
+            console.error(err.toString());
+        });
+
+    }
 });

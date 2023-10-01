@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -11,13 +12,13 @@ public partial class CDNContext : DbContext
     {
     }
 
-    private IConfiguration _configuration;
+    private IConfiguration? _configuration;
 
     public CDNContext(IConfiguration configuration)
     {
         _configuration = configuration;
     }
-
+    
     public CDNContext(DbContextOptions<CDNContext> options)
         : base(options)
     {
@@ -34,12 +35,20 @@ public partial class CDNContext : DbContext
     public virtual DbSet<CDNUserConn> CDNUserConn { get; set; }
     public virtual DbSet<Simpleuser> Simpleuser { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        //string connectionString = _configuration.GetConnectionString("SQLCONNSTR_CDNConn");
+        //optionsBuilder.UseSqlServer(connectionString);
+        optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("SQLCONNSTR_CDNConn"));
+    }
+
+
     //"Data Source=CNKZ463-DELL\\SQLEXPRESS;Initial Catalog=dbdemo;User ID=demo;Password=P@ssw0rd;TrustServerCertificate=true"
     //"Data Source=tcp:shas.database.windows.net,1433;Initial Catalog=dbdemo;Persist Security Info=False;User ID=demo;Password=P@ssw0rd;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=true;Connection Timeout=30;"
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-       //=> optionsBuilder.UseSqlServer("Data Source=CNKZ463-DELL\\SQLEXPRESS;Initial Catalog=dbdemo;User ID=demo;Password=P@ssw0rd;TrustServerCertificate=true");
-       => optionsBuilder.UseSqlServer(_configuration.GetConnectionString("SQLCONNSTR_CDNConn"));
+    //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+    //       //=> optionsBuilder.UseSqlServer("Data Source=CNKZ463-DELL\\SQLEXPRESS;Initial Catalog=dbdemo;User ID=demo;Password=P@ssw0rd;TrustServerCertificate=true");
+    //       => optionsBuilder.UseSqlServer(_configuration.GetConnectionString("SQLCONNSTR_CDNConn"));
     //=> optionsBuilder.UseSqlServer("Data Source=tcp:shas.database.windows.net,1433;Initial Catalog=dbdemo;Persist Security Info=False;User ID=demo;Password=P@ssw0rd;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=true;Connection Timeout=30;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

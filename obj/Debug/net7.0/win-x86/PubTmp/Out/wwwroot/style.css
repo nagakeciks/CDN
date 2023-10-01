@@ -1,4 +1,4 @@
-﻿ul {
+﻿.ul-menu {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -6,16 +6,16 @@
     background-color: #333;
 }
 
-li {
+.li-menu {
     float: left;
     border-right: 1px solid #bbb;
 }
 
-    li:last-child {
+    .li-menu:last-child {
         border-right: none;
     }
 
-    li a {
+    .li-menu a {
         display: block;
         color: white;
         text-align: center;
@@ -23,11 +23,11 @@ li {
         text-decoration: none;
     }
 
-        li a:hover:not(.active) {
+        .li-menu a:hover:not(.active) {
             background-color: #111;
         }
 
-        li a:hover:visited {
+        .li-menu a:hover:visited {
             background-color: #189cba;
         }
 
@@ -40,8 +40,8 @@ li {
 }
 /* Header styles */
 header {
-    background-color: #333; /* Background color */
-    color: #fff; /* Text color */
+    background-color: #D5E8F0; /* Background color */
+    color: #333; /* Text color */
     padding: 20px 0; /* Padding top and bottom */
     text-align: center; /* Center-align text */
 }

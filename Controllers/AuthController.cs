@@ -77,7 +77,7 @@ namespace HafizDemoAPI.Controllers
             }
             catch(Exception ex) {
 
-                return BadRequest(new Err { HasError = true , Error = ex.Message});
+                return Ok(new Err { HasError = true , Error = ex.Message});
                 //return Ok(ex.Message);
             }
 
